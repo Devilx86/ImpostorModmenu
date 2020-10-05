@@ -554,10 +554,11 @@ public class MenuService extends Service {
         });
 
         addSubtitle("Ship");
-        addSwitch("Sabotage all", new CompoundButton.OnCheckedChangeListener() {
+
+        addItem("Sabotage all", new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                updateMods(25, isChecked ? 1 : 0);
+            public void onClick(View v) {
+                updateMods(25, 1);
             }
         });
 
@@ -568,7 +569,7 @@ public class MenuService extends Service {
             }
         });
 
-        addItem("Sabotage Loop", new View.OnClickListener() {
+        addItem("Sabotage", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final PopupMenu menu = new PopupMenu(getBaseContext(), v);
