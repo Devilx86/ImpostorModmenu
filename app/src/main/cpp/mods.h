@@ -239,14 +239,14 @@ void ModFixedUpdate(PlayerControl_o *instance) {
             rpcRepairSystem(shipInstance, 0x8, 64);
             rpcRepairSystem(shipInstance, 0x8, 65);
 
-             /*
-            // to toggle light switches
-            old_ShipStatus_RpcRepairSystem(shipInstance, 0x7, 0); // toggle first switch
-            old_ShipStatus_RpcRepairSystem(shipInstance, 0x7, 1); // toggle second switch
-            old_ShipStatus_RpcRepairSystem(shipInstance, 0x7, 2); // toggle third switch
-            old_ShipStatus_RpcRepairSystem(shipInstance, 0x7, 3); // toggle fourth switch
-            old_ShipStatus_RpcRepairSystem(shipInstance, 0x7, 4); // toggle fifth switch
-            */
+            /*
+           // to toggle light switches
+           old_ShipStatus_RpcRepairSystem(shipInstance, 0x7, 0); // toggle first switch
+           old_ShipStatus_RpcRepairSystem(shipInstance, 0x7, 1); // toggle second switch
+           old_ShipStatus_RpcRepairSystem(shipInstance, 0x7, 2); // toggle third switch
+           old_ShipStatus_RpcRepairSystem(shipInstance, 0x7, 3); // toggle fourth switch
+           old_ShipStatus_RpcRepairSystem(shipInstance, 0x7, 4); // toggle fifth switch
+           */
 
             // Fix Reactor
             // top side
@@ -601,9 +601,9 @@ void applyHooks() {
     /* Patching certain functions initially */
     do {
         isDone = memWrite(getAbsoluteAddress(offsets.getBoughtNoAds, true), sc_ret_1, sizeof(sc_ret_1) - 1)
-                    && memWrite(getAbsoluteAddress(offsets.getUnlockedPets), sc_ret_1, sizeof(sc_ret_1) - 1)
-                    && memWrite(getAbsoluteAddress(offsets.getUnlockedHats), sc_ret_1, sizeof(sc_ret_1) - 1)
-                    && memWrite(getAbsoluteAddress(offsets.getUnlockedSkins), sc_ret_1, sizeof(sc_ret_1) - 1);
+                 && memWrite(getAbsoluteAddress(offsets.getUnlockedPets), sc_ret_1, sizeof(sc_ret_1) - 1)
+                 && memWrite(getAbsoluteAddress(offsets.getUnlockedHats), sc_ret_1, sizeof(sc_ret_1) - 1)
+                 && memWrite(getAbsoluteAddress(offsets.getUnlockedSkins), sc_ret_1, sizeof(sc_ret_1) - 1);
         LOGD("isPatched: %d", isDone);
     } while(!isDone);
     LOGD("Patches Applied!");
