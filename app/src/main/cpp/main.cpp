@@ -155,9 +155,6 @@ JNIEXPORT void JNICALL updateMods(JNIEnv *env, jobject instance, jint feature, j
             break;
 
         case 27:
-            if( value < 0 || value >= 5)
-                sabotage = -1;
-            else
                 sabotage = sabotageOptions[value];
             break;
 

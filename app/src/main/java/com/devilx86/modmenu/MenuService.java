@@ -578,9 +578,6 @@ public class MenuService extends Service {
                 for(int i = 0; i < list.size(); i++)
                     menu.getMenu().add(list.get(i));
 
-                // Off option outside list so that we get -1 in NDK (option out of list == turn off mod)
-                menu.getMenu().add("Turn Off");
-
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
