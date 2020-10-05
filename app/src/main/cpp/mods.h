@@ -133,12 +133,15 @@ void ModFixedUpdate(PlayerControl_o *instance) {
             for (int i = 0; i < pArraySize; i++) {
                 // Show impostor
                 if(pArray->m_Items[i]->_cachedData->IsImpostor) {
-                    if (impostors[0] == NULL)
+                    if (impostors[0] == NULL) {
                         impostors[0] = pArray->m_Items[i];
-                    else if (impostors[1] == NULL)
+                    }
+                    else if (impostors[1] == NULL) {
                         impostors[1] = pArray->m_Items[i];
-                    else if (impostors[2] == NULL);
+                    }
+                    else if (impostors[2] == NULL) {
                         impostors[2] = pArray->m_Items[i];
+                    }
 
                     if (!wasImpostor) {
                         pArray->m_Items[i]->nameText->Color = classPalette->static_fields->White;
@@ -522,6 +525,7 @@ void VoteBanSystem_Awake(VoteBanSystem_o *instance) {
     vbInstance = instance;
     old_VoteBanSystem_Awake(instance);
 }
+
 void(*old_MeetingHud_Update)(MeetingHud_o *instance);
 void MeetingHud_Update(MeetingHud_o *instance) {
     for(int i = 0; i < instance->playerStates->max_length && i < 10; i++) {
@@ -540,13 +544,6 @@ void MeetingHud_Update(MeetingHud_o *instance) {
             }
         }
         if(castVotePlayer != NULL) {
-            /*
-             * if(forceAllVote) {
-             *    cmdClearVote(instance, getClientIDByCharacter(player));
-             * }
-             */
-            if(instance->playerStates->m_Items[i]->didVote)
-                cmdClearVote(instance, instance->playerStates->m_Items[i]->TargetPlayerId);
             cmdCastVote(instance, instance->playerStates->m_Items[i]->TargetPlayerId, castVotePlayer->PlayerId);
         }
     }
@@ -581,9 +578,7 @@ bool StatsManager_getAmBanned(StatsManager_o *instance) {
 
         // Save Stats
         ((void (__fastcall *)(StatsManager_o *,
-                              void *)) instance->klass->vtable._5_SaveStats.methodPtr)(
-                instance,
-                instance->klass->vtable._5_SaveStats.method);
+                              void *)) instance->klass->vtable._5_SaveStats.methodPtr)(instance, instance->klass->vtable._5_SaveStats.method);
     }
 
     AmBan = old_StatsManager_getAmBanned(instance);
@@ -595,7 +590,6 @@ bool StatsManager_getAmBanned(StatsManager_o *instance) {
 void applyHooks() {
     /* shellcodes */
     char sc_ret_1[] = "\x20\x00\x80\xD2\xC0\x03\x5F\xD6";
-    char sc_ret_0[] = "\x00\x00\x80\xD2\xC0\x03\x5F\xD6";
 
     bool isDone = false;
     /* Patching certain functions initially */
@@ -652,13 +646,6 @@ void applyHooks() {
                             (void *) &InnerNetClient_FixedUpdate,
                             (void **) &old_InnerNetClient_FixedUpdate);
         }
-        if(*old_InnerNetClient_FixedUpdate == NULL) {
-            LOGD("Failed to hook innerNetFixedUpdate");
-            isDone = false;
-            A64HookFunction(getAbsoluteAddress(offsets.netFixedUpdate),
-                            (void *) &InnerNetClient_FixedUpdate,
-                            (void **) &old_InnerNetClient_FixedUpdate);
-        }
         if(*old_MeetingHud_Update == NULL) {
             LOGD("Failed to hook meetingHudUpdate");
             isDone = false;
@@ -679,14 +666,6 @@ void applyHooks() {
             A64HookFunction(getAbsoluteAddress(offsets.onGameJoined),
                             (void*) AmongUsClient_OnGameJoined,
                             (void**) &old_AmongUsClient_OnGameJoined);
-        }
-
-        if(*old_VoteBanSystem_Awake == NULL) {
-            LOGD("Failed to hook VoteBanSystem_Awake");
-            isDone = false;
-            A64HookFunction(getAbsoluteAddress(offsets.voteBanAwake),
-                            (void*) VoteBanSystem_Awake,
-                            (void**) &old_VoteBanSystem_Awake);
         }
 
         if(*old_VoteBanSystem_Awake == NULL) {
