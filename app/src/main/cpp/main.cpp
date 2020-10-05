@@ -173,10 +173,12 @@ JNIEXPORT void JNICALL updateMods(JNIEnv *env, jobject instance, jint feature, j
 
 JNIEXPORT void JNICALL sendLobbyMessage(JNIEnv *env, jclass klass, jstring text)
 {
-    char *msg = (char *) env->GetStringUTFChars(text, NULL);
-    message = std::string(msg);
-    LOGD("Message: %s", message.data());
-    advertiseMenu = true;
+    if(!advertiseMenu) {
+        char *msg = (char *) env->GetStringUTFChars(text, NULL);
+        message = std::string(msg);
+        LOGD("Message: %s", message.data());
+        advertiseMenu = true;
+    }
 }
 
 JNIEXPORT jobjectArray JNICALL getPlayerNames(JNIEnv *env, jclass klass)

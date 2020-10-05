@@ -313,20 +313,17 @@ void ModFixedUpdate(PlayerControl_o *instance) {
             }
     */
 
-    if (advertiseMenu) {
+    if (advertiseMenu && localPlayer != NULL) {
         PlayerControl_array *pArray = instance->klass->static_fields->AllPlayerControls->_items;
         int pArraySize = instance->klass->static_fields->AllPlayerControls->_size;
-        for (int i = 0; i < pArraySize; i++) {
+        for (int i = 0; i < pArraySize && i < 10; i++) {
             if(pArray->m_Items[i] != NULL) {
-                LOGD("Sending Message: %d", i);
                 System_String_o *msg = new System_String_o;
                 msg->klass = pArray->m_Items[i]->_cachedData->PlayerName->klass;
                 msg->monitor = pArray->m_Items[i]->_cachedData->PlayerName->monitor;
                 msg->m_stringLength = message.length();
-                LOGD("Sending Message: %d", i);
                 readStr2Uint16(message.data(), &msg->m_firstChar, message.length());
 
-                LOGD("Sending Message: %d", i);
                 old_PlayerControl_RpcSendChat(pArray->m_Items[i]->_cachedData->_object, msg);
             }
         }
@@ -494,6 +491,7 @@ void AmongUsClient_OnGameJoined (AmongUsClient_o *instance, System_String_o *gam
 
     getPlayersList = false;
     teleportAlltoMe = false;
+    advertiseMenu = false;
 }
 
 void (*old_InnerNetClient_FixedUpdate)(InnerNet_InnerNetClient_o *instance);
