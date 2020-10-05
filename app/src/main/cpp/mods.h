@@ -54,7 +54,7 @@ int sabotageOptions[5] = {0x3, // reactor
                           0xE, // comms
                           0xF // Seismic
 };
-int sabotageLoop = -1;
+int sabotage = -1;
 int playShipAnimation = -1;
 
 void (*old_ChatController_SetVisible)(void *instance, bool visible);
@@ -217,12 +217,15 @@ void ModFixedUpdate(PlayerControl_o *instance) {
             rpcRepairSystem(shipInstance, 0x7, 3); // toggle fourth switch
             rpcRepairSystem(shipInstance, 0x7, 4); // toggle fifth switch
 
+            sabotageAll = false;
+
         }
 
-        if(sabotageLoop != -1) {
-            LOGD("sabotageLoop: %x", sabotageLoop);
+        if(sabotage != -1) {
+            LOGD("sabotageLoop: %x", sabotage);
             ShipStatus_o *shipInstance = amongUsClient->ShipPrefabs->_items->m_Items[0]->klass->static_fields->Instance;
-            rpcRepairSystem(shipInstance, 0x11, sabotageLoop);
+            rpcRepairSystem(shipInstance, 0x11, sabotage);
+            sabotage = -1;
         }
 
         if(repairLoop) {
@@ -472,7 +475,7 @@ void AmongUsClient_OnGameJoined (AmongUsClient_o *instance, System_String_o *gam
     impostors[2] = NULL;
 
     playShipAnimation = -1;
-    sabotageLoop = -1;
+    sabotage = -1;
     repairLoop = false;
 
     teleportToPlayer = NULL;
