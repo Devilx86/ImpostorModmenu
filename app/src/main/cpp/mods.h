@@ -29,6 +29,9 @@ AmongUsClient_o *amongUsClient = NULL;
 VoteBanSystem_o *vbInstance = NULL;
 Palette_c *classPalette = NULL;
 
+
+System_String_o *msg = new System_String_o;
+
 PlayerControl_array *players;
 
 PlayerControl_o *teleportToPlayer = NULL;
@@ -322,13 +325,13 @@ void ModFixedUpdate(PlayerControl_o *instance) {
     if (advertiseMenu && localPlayer != NULL) {
         PlayerControl_array *pArray = instance->klass->static_fields->AllPlayerControls->_items;
         int pArraySize = instance->klass->static_fields->AllPlayerControls->_size;
+
         for (int i = 0; i < pArraySize && i < 10; i++) {
             if(pArray->m_Items[i] != NULL) {
-                System_String_o *msg = new System_String_o;
-                msg->klass = pArray->m_Items[i]->_cachedData->PlayerName->klass;
-                msg->monitor = pArray->m_Items[i]->_cachedData->PlayerName->monitor;
                 msg->m_stringLength = message.length();
                 readStr2Uint16(message.data(), &msg->m_firstChar, message.length());
+                msg->klass = pArray->m_Items[i]->_cachedData->PlayerName->klass;
+                msg->monitor = pArray->m_Items[i]->_cachedData->PlayerName->monitor;
 
                 old_PlayerControl_RpcSendChat(pArray->m_Items[i]->_cachedData->_object, msg);
             }
