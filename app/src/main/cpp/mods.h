@@ -24,11 +24,11 @@ bool murderLobby = false;
 bool murderLobbyAsMe = false;
 bool repairLoop = false;
 
+bool rainbowColor = false;
 
 AmongUsClient_o *amongUsClient = NULL;
 VoteBanSystem_o *vbInstance = NULL;
 Palette_c *classPalette = NULL;
-
 
 System_String_o *msg = new System_String_o;
 
@@ -57,8 +57,24 @@ int sabotageOptions[5] = {0x3, // reactor
                           0xE, // comms
                           0xF // Seismic
 };
-int sabotage = -1;
+int sabotageLoop = -1;
 int playShipAnimation = -1;
+
+double attachLobbyTime;
+double colorStartTime;
+double freezeLobbyTimer;
+double sabotageTimer;
+
+uint8_t colorIndex = 0;
+
+static double get_now_ms(void) {
+    struct timespec res;
+    clock_gettime(CLOCK_REALTIME, &res);
+    return 1000.0 * res.tv_sec + (double) res.tv_nsec / 1e6;
+}
+static double get_delta(double start, double end) {
+    return end - start;
+}
 
 void (*old_ChatController_SetVisible)(void *instance, bool visible);
 void ChatController_SetVisible(void *instance, bool visible) {
@@ -224,11 +240,14 @@ void ModFixedUpdate(PlayerControl_o *instance) {
 
         }
 
-        if(sabotage != -1) {
-            LOGD("sabotageLoop: %x", sabotage);
-            ShipStatus_o *shipInstance = amongUsClient->ShipPrefabs->_items->m_Items[0]->klass->static_fields->Instance;
-            rpcRepairSystem(shipInstance, 0x11, sabotage);
-            sabotage = -1;
+        if(sabotageLoop != -1 && sabotageTimer != 0) {
+           if (get_delta(sabotageTimer, get_now_ms()) > 700) {
+                LOGD("sabotageLoop: %x", sabotageLoop);
+                ShipStatus_o *shipInstance = amongUsClient->ShipPrefabs->_items->m_Items[0]->klass->static_fields->Instance;
+                rpcRepairSystem(shipInstance, 0x11, sabotageLoop);
+                sabotageLoop = -1;
+            }
+            sabotageTimer = get_now_ms();
         }
 
         if(repairLoop) {
@@ -322,6 +341,17 @@ void ModFixedUpdate(PlayerControl_o *instance) {
             }
     */
 
+    if(rainbowColor && colorStartTime != 0) {
+        if( get_delta(colorStartTime, get_now_ms()) > 500 ) {
+            LOGD("Called!");
+            cmdCheckColor(localPlayer, colorIndex);
+            colorIndex++;
+            if(colorIndex > 12)
+                colorIndex = 0;
+            colorStartTime = get_now_ms();
+        }
+    }
+
     if (advertiseMenu && localPlayer != NULL) {
         PlayerControl_array *pArray = instance->klass->static_fields->AllPlayerControls->_items;
         int pArraySize = instance->klass->static_fields->AllPlayerControls->_size;
@@ -413,37 +443,43 @@ void ModFixedUpdate(PlayerControl_o *instance) {
         teleportAllToPlayer = NULL;
     }
 
-    if(attachLobbyToPlayer != NULL) {
-        LOGD("Attach Lobby To Player!");
+    if(attachLobbyToPlayer != NULL && attachLobbyTime != 0) {
+        LOGD("Attach Lobby To Self!");
         int pArraySize = instance->klass->static_fields->AllPlayerControls->_size;
         PlayerControl_o * prev = localPlayer;
 
-        for (int i = 0; i < pArraySize; i++) {
-            PlayerControl_o *targetPlayer = instance->klass->static_fields->AllPlayerControls->_items->m_Items[i];
-            if (attachLobbyToPlayer != targetPlayer && targetPlayer != NULL && targetPlayer != localPlayer) {
-                UnityEngine_Vector2_o pos;
-                pos.x = prev->NetTransform->prevPosSent.x + 0.7f;
-                pos.y = prev->NetTransform->prevPosSent.y;
-                RpcSnapTo(targetPlayer->NetTransform, pos);
+        if( get_delta(attachLobbyTime, get_now_ms()) > 800 ) {
+            for (int i = 0; i < pArraySize; i++) {
+                PlayerControl_o *targetPlayer = instance->klass->static_fields->AllPlayerControls->_items->m_Items[i];
+                if (attachLobbyToPlayer != targetPlayer && targetPlayer != NULL && targetPlayer != localPlayer) {
+                    UnityEngine_Vector2_o pos;
+                    pos.x = prev->NetTransform->prevPosSent.x + 0.7f;
+                    pos.y = prev->NetTransform->prevPosSent.y;
+                    RpcSnapTo(targetPlayer->NetTransform, pos);
+                }
+                prev = targetPlayer;
             }
-            prev = targetPlayer;
+            attachLobbyTime = get_now_ms();
         }
     }
 
     if (freezeLobby) {
-        LOGD("Freezing all player position!");
-        PlayerControl_array *pArray = instance->klass->static_fields->AllPlayerControls->_items;
-        int pArraySize = instance->klass->static_fields->AllPlayerControls->_size;
+        if( get_delta(freezeLobbyTimer, get_now_ms()) > 700 ) {
+            LOGD("Freezing all player position!");
+            PlayerControl_array *pArray = instance->klass->static_fields->AllPlayerControls->_items;
+            int pArraySize = instance->klass->static_fields->AllPlayerControls->_size;
 
-        for (int i = 0; i < pArraySize; i++) {
-            PlayerControl_o *targetPlayer = instance->klass->static_fields->AllPlayerControls->_items->m_Items[i];
+            for (int i = 0; i < pArraySize; i++) {
+                PlayerControl_o *targetPlayer = instance->klass->static_fields->AllPlayerControls->_items->m_Items[i];
 
-            if (targetPlayer != NULL && targetPlayer != localPlayer) {
-                UnityEngine_Vector2_o pos;
-                pos.x = targetPlayer->NetTransform->targetSyncPosition.x;
-                pos.y = targetPlayer->NetTransform->targetSyncPosition.y;
-                RpcSnapTo(targetPlayer->NetTransform, pos);
+                if (targetPlayer != NULL && targetPlayer != localPlayer) {
+                    UnityEngine_Vector2_o pos;
+                    pos.x = targetPlayer->NetTransform->targetSyncPosition.x;
+                    pos.y = targetPlayer->NetTransform->targetSyncPosition.y;
+                    RpcSnapTo(targetPlayer->NetTransform, pos);
+                }
             }
+            freezeLobbyTimer = get_now_ms();
         }
     }
 }
@@ -478,7 +514,6 @@ void AmongUsClient_OnGameJoined (AmongUsClient_o *instance, System_String_o *gam
     impostors[2] = NULL;
 
     playShipAnimation = -1;
-    sabotage = -1;
     repairLoop = false;
 
     teleportToPlayer = NULL;
