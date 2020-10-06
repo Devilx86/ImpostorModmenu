@@ -54,3 +54,16 @@ Passive features included by default:
 - 10 min Antiban
 - See Ghosts
 - No Ads
+
+## Injecting Menu
+- Compile the menu in android studio or download the release build.
+- Edit inject-apk.sh with path to amongus apk, the menu build and a keystore if you want the script to sign the build for you.
+- run ./inject-apk.sh
+- This will output an injected version of the game.
+
+## Running the menu
+- Install the apk
+- Accept draw over app permission
+- close app and clear task
+- Tap open app 2 to 3 times, this is because its loading the base address of the game library.
+- If all goes well, you should see the menu now.
