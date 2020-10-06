@@ -9,6 +9,7 @@ Self
 - No Kill Cooldown
 - Show Impostors
 - No Emergency Cooldown
+- Color Cycler (Constantly Cycle through different player colors)
 
 Player Options
 - Teleport to Player
@@ -35,9 +36,9 @@ Lobby
 - Murder Impostors (Make the impostors kill themselves)
 
 Ship
-- Sabotage Everything (Sabotages reactor, comms, lights and o2 all at once)
 - Lock All Doors
-- Sabotage (sabotages without being the impostor if timer is up)
+- Sabotage Loop (Constantly tries to sabotage chosen system and sabotages when 'sabotage' is available in game)
+- Sabotage All (Sabotages reactor, comms, lights and o2 all at once)
 - Repair (Automatically repair O2, comms and reactor)
 - Play Shield Animation (Play the ship task animations to pretend to not be the impostor)
 - Play weapons Animation
