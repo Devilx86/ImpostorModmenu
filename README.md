@@ -2,6 +2,8 @@
 Mod menu for Among Us on Android (arm64 only)
 All features except for force impostor work without being the host and is visible to other clients in the game.
 
+Official Post: https://polarmods.com/threads/among-us-imposter-modmenu-for-android-arm64-teleport-freeze-attach-kick-and-more.951/#post-28402
+
 Self
 - Fake Impostor
 - No Kill Cooldown
