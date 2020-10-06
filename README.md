@@ -55,6 +55,8 @@ Passive features included by default:
 - See Ghosts
 - No Ads
 
+A short demo: https://www.youtube.com/watch?v=zrc_FMnWyRM&feature=youtu.be
+
 ## Injecting Menu
 - Compile the menu in android studio or download the release build.
 - Edit inject-apk.sh with path to amongus apk, the menu build and a keystore if you want the script to sign the build for you.
