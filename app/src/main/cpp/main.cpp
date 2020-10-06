@@ -110,10 +110,11 @@ JNIEXPORT void JNICALL updateMods(JNIEnv *env, jobject instance, jint feature, j
             break;
 
         case 18:
+            attachLobbyToPlayer = NULL;
+            attachLobbyTime = 0;
             if (value > -1 && value < 10) {
                 attachLobbyToPlayer = players->m_Items[value];
-            } else {
-                attachLobbyToPlayer = NULL;
+                attachLobbyTime = get_now_ms();
             }
             break;
 
@@ -155,7 +156,12 @@ JNIEXPORT void JNICALL updateMods(JNIEnv *env, jobject instance, jint feature, j
             break;
 
         case 27:
-                sabotage = sabotageOptions[value];
+            sabotageLoop = -1;
+            sabotageTimer = 0;
+            if (value > -1 && value < 5) {
+                sabotageLoop = sabotageOptions[value];
+                sabotageTimer = get_now_ms();
+            }
             break;
 
         case 28:
@@ -164,6 +170,15 @@ JNIEXPORT void JNICALL updateMods(JNIEnv *env, jobject instance, jint feature, j
 
         case 29:
             playShipAnimation = value;
+            break;
+
+        case 30:
+            rainbowColor = value;
+            colorStartTime = 0;
+            if(rainbowColor) {
+                colorIndex = 0;
+                colorStartTime = get_now_ms();
+            }
             break;
     }
 }

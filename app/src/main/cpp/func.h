@@ -27,6 +27,7 @@ struct {
     uintptr_t cmdAddVote       = 0x0000000000776F78;
     uintptr_t cmdCastVote      = 0x00000000006A6FC4;
     uintptr_t cmdClearVote     = 0x00000000006A7524;
+    uintptr_t cmdCheckColor    = 0x000000000068F3B0;
 
     uintptr_t onGameJoined     = 0x00000000007237CC;
     uintptr_t introCoBegin     = 0x0000000000749E48;
@@ -57,35 +58,44 @@ typedef void ShipStatus_RpcCloseDoorsOfType(ShipStatus_o *instance, uint8_t type
 //typedef bool PlayerControl_RpcSendChat(PlayerControl_o *instance, System_String_o *chatText);
 
 typedef void PlayerControl_RpcPlayAnimation(PlayerControl_o *instance, uint8_t animType);
-
+typedef void PlayerControl_CmdCheckColor(PlayerControl_o *instance, uint8_t bodyColor);
 
 //PlayerControl_RpcSendChat             *RpcSendChat;
 InnerNetClient_GetClientIdFromCharacter *getClientIdFromCharacter;
-PlayerControl_CmdReportDeadBody         *cmdReportDead;
+PlayerControl_setVisible                *pcSetVisible;
+
 CustomNetworkTransform_RpcSnapTo        *RpcSnapTo;
 PlayerControl_RpcSetScanner             *rpcSetScanner;
 PlayerControl_RpcMurderPlayer           *rpcMurderPlayer;
-PlayerControl_setVisible                *pcSetVisible;
-VoteBanSystem_CmdAddVote                *cmdAddVote;
-MeetingHud_CmdCastVote                  *cmdCastVote;
-MeetingHud_RpcClearVote                 *cmdClearVote;
 PlayerControl_RpcCompleteTask           *rpcCompleteTask;
 ShipStatus_RpcCloseDoorsOfType          *rpcCloseDoorsOfType;
 ShipStatus_RpcRepairSystem              *rpcRepairSystem;
-ShipStatus_RepairSystem                 *repairSystem;
-//PlayerPhysics_RpcEnterVent              *rpcEnterVent;
-//PlayerPhysics_RpcExitVent               *rpcExitVent;
 PlayerControl_RpcPlayAnimation          *rpcPlayAnimation;
+
+ShipStatus_RepairSystem                 *repairSystem;
+//PlayerPhysics_RpcEnterVent              *rpcEnterVent;   // client side only..
+//PlayerPhysics_RpcExitVent               *rpcExitVent;
+
+
+PlayerControl_CmdReportDeadBody         *cmdReportDead;
+VoteBanSystem_CmdAddVote                *cmdAddVote;
+MeetingHud_CmdCastVote                  *cmdCastVote;
+MeetingHud_RpcClearVote                 *cmdClearVote;
+PlayerControl_CmdCheckColor             *cmdCheckColor;
+
 
 void initFunction() {
 
-    RpcSnapTo       = (CustomNetworkTransform_RpcSnapTo *) getAbsoluteAddress(offsets.rpcSnapTo);
-    pcSetVisible    = (PlayerControl_setVisible *) getAbsoluteAddress(offsets.pcSetVisible);
     //RpcSendChat   = (PlayerControl_RpcSendChat *) getAbsoluteAddress(offsets.rpcSendChat);
     cmdAddVote      = (VoteBanSystem_CmdAddVote *) getAbsoluteAddress(offsets.cmdAddVote);
     cmdClearVote    = (MeetingHud_RpcClearVote*) getAbsoluteAddress(offsets.cmdClearVote);
     cmdCastVote     = (MeetingHud_CmdCastVote *) getAbsoluteAddress(offsets.cmdCastVote);
+    cmdCheckColor   = (PlayerControl_CmdCheckColor*) getAbsoluteAddress(offsets.cmdCheckColor);
+
+    pcSetVisible    = (PlayerControl_setVisible *) getAbsoluteAddress(offsets.pcSetVisible);
     getClientIdFromCharacter = (InnerNetClient_GetClientIdFromCharacter *) getAbsoluteAddress(offsets.getClientID);
+
+    RpcSnapTo       = (CustomNetworkTransform_RpcSnapTo *) getAbsoluteAddress(offsets.rpcSnapTo);
     rpcSetScanner   = (PlayerControl_RpcSetScanner *) getAbsoluteAddress(offsets.rpcSetScanner);
     rpcRepairSystem = (ShipStatus_RpcRepairSystem *) getAbsoluteAddress(offsets.rpcRepairSystem);
     repairSystem    = (ShipStatus_RepairSystem *) getAbsoluteAddress(offsets.repairSystem);

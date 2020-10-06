@@ -32,7 +32,7 @@ import java.util.List;
 
 public class MenuService extends Service {
     private final String TAG = "IMPOSTORMENU";
-    private final String MENU_TITLE = "Impostor Modmenu v1.0";
+    private final String MENU_TITLE = "Impostor Modmenu v1.1";
     private final String MENU_AUTHOR = "Devilx86";
     private final String MENU_FOOTER = "www.github.com/" + MENU_AUTHOR;
 
@@ -73,6 +73,25 @@ public class MenuService extends Service {
         label.setPadding(10, 5, 0, 10);
         label.setText(text);
         label.setOnClickListener(on);
+        label.setClickable(true);
+        /*
+        label.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction())
+                {
+                    case MotionEvent.ACTION_DOWN:
+                        v.setBackgroundColor(Color.GRAY);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_MOVE:
+                        v.setBackgroundColor(Color.parseColor("#171E24"));
+                        break;
+                }
+                return true;
+            }
+        });
+        */
         mMenuBody.addView(label);
     }
 
@@ -151,6 +170,13 @@ public class MenuService extends Service {
                 updateMods(4, isChecked ? 1 : 0);
             }
         });
+        addSwitch("Color Cycler", new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateMods(30, isChecked ? 1 : 0);
+            }
+        });
+
 
         addSubtitle("Player Options");
         addItem("Teleport to Player", new View.OnClickListener() {
@@ -555,13 +581,6 @@ public class MenuService extends Service {
 
         addSubtitle("Ship");
 
-        addItem("Sabotage all", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateMods(25, 1);
-            }
-        });
-
         addSwitch("Lock All Doors", new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -569,7 +588,7 @@ public class MenuService extends Service {
             }
         });
 
-        addItem("Sabotage", new View.OnClickListener() {
+        addItem("Sabotage Loop", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final PopupMenu menu = new PopupMenu(getBaseContext(), v);
@@ -578,6 +597,7 @@ public class MenuService extends Service {
                 for(int i = 0; i < list.size(); i++)
                     menu.getMenu().add(list.get(i));
 
+                menu.getMenu().add("Turn Off loop");
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
@@ -586,6 +606,13 @@ public class MenuService extends Service {
                     }
                 });
                 menu.show();
+            }
+        });
+
+        addItem("Sabotage all", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateMods(25, 1);
             }
         });
 
