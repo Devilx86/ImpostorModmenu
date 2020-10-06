@@ -90,11 +90,18 @@ void PlayerControl_RpcSendChat(PlayerControl_o *instance, System_String_o *chatT
     old_PlayerControl_RpcSendChat(instance, chatText);
 }
 
+/*
+void (*old_EmergencyMinigame_Update)(EmergencyMinigame_o *instance);
+void EmergencyMinigame_Update(EmergencyMinigame_o *instance) {
+    if(noEmergencyCoolDown)
+        instance->ButtonActive = true;
+    old_EmergencyMinigame_Update(instance);
+}
+*/
 // Function Only called when you are host
 void (*old_PlayerControl_RpcSetInfected)(PlayerControl_o *instance, GameData_PlayerInfo_array *infected);
 void PlayerControl_RpcSetInfected(PlayerControl_o *instance, GameData_PlayerInfo_array *infected)
 {
-    LOGD("RPCSetInfected");
     // Replace the first impostor with our handle
     if(forceImpostor)
         infected->m_Items[0] = instance->_cachedData;
@@ -107,13 +114,11 @@ void ModFixedUpdate(PlayerControl_o *instance) {
     PlayerControl_o *localPlayer = instance->klass->static_fields->LocalPlayer;
 
     if (getPlayersList) {
-        //LOGD("Getting Player Names..");
         PlayerControl_array *pArray = instance->klass->static_fields->AllPlayerControls->_items;
         if (pArray != NULL) {
             players = pArray;
         }
         getPlayersList = false;
-        //LOGD("Done Getting Player Names");
     }
 
     /* Client side only
@@ -165,22 +170,16 @@ void ModFixedUpdate(PlayerControl_o *instance) {
                     if (!wasImpostor) {
                         pArray->m_Items[i]->nameText->Color = classPalette->static_fields->White;
                         if (showImpostors) {
-                            std::string name = readUint162Str(
-                                    (char *) &pArray->m_Items[i]->_cachedData->PlayerName->m_firstChar,
-                                    pArray->m_Items[i]->_cachedData->PlayerName->m_stringLength);
-                            //LOGD("Impostor Name: %s", name.c_str());
                             pArray->m_Items[i]->nameText->Color = classPalette->static_fields->ImpostorRed;
                         }
                     }
                 }
                 // Show Ghosts
                 if (showGhosts && pArray->m_Items[i]->_cachedData->IsDead) {
-                    LOGD("ShowGhosts");
                     pcSetVisible(pArray->m_Items[i], true);
                 }
 
                 if (murderLobby) {
-                    LOGD("Murdering As Me");
                     // me Killing every crewmate
                     if (murderLobbyAsMe && wasImpostor) {
                         if (pArray->m_Items[i] != localPlayer)
@@ -188,7 +187,6 @@ void ModFixedUpdate(PlayerControl_o *instance) {
                                 rpcMurderPlayer(localPlayer,
                                                 pArray->m_Items[i]);
                     } else if(!murderAsMe) {
-                        LOGD("Murder Blame");
                         // An impostor killing every crew mate including me
                         // so that I can call him a hacker
                         for (int j = 0; j < 3; j++) {
@@ -215,7 +213,6 @@ void ModFixedUpdate(PlayerControl_o *instance) {
         }
 
         if (murderImpostors) {
-            LOGD("Murdering Impostors!");
             // Make the impostors kill themselves
             for (int j = 0; j < 3; j++) {
                 if (impostors[j] != NULL)
@@ -225,7 +222,6 @@ void ModFixedUpdate(PlayerControl_o *instance) {
         }
 
         if(sabotageAll) {
-            LOGD("Sabotaging Everything!");
             ShipStatus_o *shipInstance = amongUsClient->ShipPrefabs->_items->m_Items[0]->klass->static_fields->Instance;
             for(int i = 0; i < 5; i++)
                 repairSystem(shipInstance, sabotageOptions[i], localPlayer, 0x80);
@@ -237,12 +233,10 @@ void ModFixedUpdate(PlayerControl_o *instance) {
             rpcRepairSystem(shipInstance, 0x7, 4); // toggle fifth switch
 
             sabotageAll = false;
-
         }
 
         if(sabotageLoop != -1 && sabotageTimer != 0) {
            if (get_delta(sabotageTimer, get_now_ms()) > 700) {
-                LOGD("sabotageLoop: %x", sabotageLoop);
                 ShipStatus_o *shipInstance = amongUsClient->ShipPrefabs->_items->m_Items[0]->klass->static_fields->Instance;
                 rpcRepairSystem(shipInstance, 0x11, sabotageLoop);
                 sabotageLoop = -1;
@@ -251,7 +245,6 @@ void ModFixedUpdate(PlayerControl_o *instance) {
         }
 
         if(repairLoop) {
-            LOGD("repairLoop: %x", repairLoop);
             ShipStatus_o *shipInstance = amongUsClient->ShipPrefabs->_items->m_Items[0]->klass->static_fields->Instance;
 
             // Fix Oxygen
@@ -282,11 +275,9 @@ void ModFixedUpdate(PlayerControl_o *instance) {
         }
 
         if(completePlayerTasks != NULL) {
-            LOGD("Complete Player Task");
             int taskCount = completePlayerTasks->myTasks->_size;
 
             for(int i = 0 ; i < taskCount; i++) {
-                LOGD("Index: %d", taskCount);
                 uint32_t taskID = completePlayerTasks->myTasks->_items->m_Items[i]->_Id_k__BackingField;
                 rpcCompleteTask(completePlayerTasks, taskID);
             }
@@ -294,7 +285,6 @@ void ModFixedUpdate(PlayerControl_o *instance) {
         }
 
         if(lockAllDoors) {
-            LOGD("Lock All Doors");
             ShipStatus_o *shipInstance = amongUsClient->ShipPrefabs->_items->m_Items[0]->klass->static_fields->Instance;
 
             for(int i = 0; i < shipInstance->AllDoors->max_length && shipInstance->AllDoors->m_Items[i] != NULL; i++)
@@ -303,20 +293,17 @@ void ModFixedUpdate(PlayerControl_o *instance) {
         }
 
         if(playShipAnimation != -1) {
-            LOGD("Play Ship Animation");
             rpcPlayAnimation(localPlayer, playShipAnimation);
             playShipAnimation = -1;
         }
 
         if(reportDeadPlayer != NULL) {
-            LOGD("Reporting Player to be dead");
             //rpcStartMeeting(startMeetingPlayer, startMeetingPlayer->_cachedData);
             cmdReportDead(reportDeadPlayer, reportDeadPlayer->_cachedData);
             reportDeadPlayer = NULL;
         }
 
         if(murderPlayer != NULL && impostors[0] != NULL) {
-            LOGD("Murder Player");
             if(murderAsMe && wasImpostor) {
                 rpcMurderPlayer(localPlayer, murderPlayer);
                 murderAsMe = false;
@@ -343,7 +330,6 @@ void ModFixedUpdate(PlayerControl_o *instance) {
 
     if(rainbowColor && colorStartTime != 0) {
         if( get_delta(colorStartTime, get_now_ms()) > 500 ) {
-            LOGD("Called!");
             cmdCheckColor(localPlayer, colorIndex);
             colorIndex++;
             if(colorIndex > 12)
@@ -370,7 +356,6 @@ void ModFixedUpdate(PlayerControl_o *instance) {
     }
 
     if (teleportToPlayer != NULL) {
-        LOGD("Teleport to Player");
         UnityEngine_Vector2_o pos;
         pos.x = teleportToPlayer->NetTransform->targetSyncPosition.x;
         pos.y = teleportToPlayer->NetTransform->targetSyncPosition.y + 0.2f;
@@ -381,7 +366,6 @@ void ModFixedUpdate(PlayerControl_o *instance) {
     }
 
     if (teleportToMe != NULL) {
-        LOGD("Teleport to me!");
         UnityEngine_Vector2_o pos;
         pos.x = localPlayer->NetTransform->prevPosSent.x;
         pos.y = localPlayer->NetTransform->prevPosSent.y + 0.2f;
@@ -392,7 +376,6 @@ void ModFixedUpdate(PlayerControl_o *instance) {
     }
 
     if (freezePlayer != NULL) {
-        LOGD("Freeze Player");
         UnityEngine_Vector2_o pos;
         pos.x = freezePlayer->NetTransform->targetSyncPosition.x;
         pos.y = freezePlayer->NetTransform->targetSyncPosition.y;
@@ -409,7 +392,6 @@ void ModFixedUpdate(PlayerControl_o *instance) {
     */
 
     if (teleportAlltoMe) {
-        LOGD("Teleporting all to me!");
         PlayerControl_array *pArray = instance->klass->static_fields->AllPlayerControls->_items;
         int pArraySize = instance->klass->static_fields->AllPlayerControls->_size;
         for (int i = 0; i < pArraySize; i++) {
@@ -426,7 +408,6 @@ void ModFixedUpdate(PlayerControl_o *instance) {
     }
 
     if(teleportAllToPlayer != NULL) {
-        LOGD("Teleporting all to player!");
         PlayerControl_array *pArray = instance->klass->static_fields->AllPlayerControls->_items;
         int pArraySize = instance->klass->static_fields->AllPlayerControls->_size;
 
@@ -444,7 +425,6 @@ void ModFixedUpdate(PlayerControl_o *instance) {
     }
 
     if(attachLobbyToPlayer != NULL && attachLobbyTime != 0) {
-        LOGD("Attach Lobby To Self!");
         int pArraySize = instance->klass->static_fields->AllPlayerControls->_size;
         PlayerControl_o * prev = localPlayer;
 
@@ -465,7 +445,6 @@ void ModFixedUpdate(PlayerControl_o *instance) {
 
     if (freezeLobby) {
         if( get_delta(freezeLobbyTimer, get_now_ms()) > 700 ) {
-            LOGD("Freezing all player position!");
             PlayerControl_array *pArray = instance->klass->static_fields->AllPlayerControls->_items;
             int pArraySize = instance->klass->static_fields->AllPlayerControls->_size;
 
@@ -602,7 +581,6 @@ void IntroCutscene_CoBegin(IntroCutscene_o *instance, System_Collections_Generic
 
     if(isImpostor) {
         fakeImpostor = false;
-        LOGD("FakeImpostor: ", fakeImpostor);
     }
 
     old_IntroCutscene_CoBegin(instance, yourTeam, isImpostor);
@@ -716,6 +694,17 @@ void applyHooks() {
                             (void*) VoteBanSystem_Awake,
                             (void**) &old_VoteBanSystem_Awake);
         }
+
+        /*
+        if(*old_EmergencyMinigame_Update == NULL) {
+            LOGD("Failed to hook EmergencyMinigame_Update");
+            isDone = false;
+            A64HookFunction(getAbsoluteAddress(offsets.voteBanAwake),
+                            (void*) EmergencyMinigame_Update,
+                            (void**) &old_EmergencyMinigame_Update);
+        }
+        */
+
     } while(!isDone);
 
     initFunction();
