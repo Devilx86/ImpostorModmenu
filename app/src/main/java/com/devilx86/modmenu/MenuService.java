@@ -232,6 +232,8 @@ public class MenuService extends Service {
                 final List<String> list = l;
                 for(int i = 0; i < list.size(); i++)
                     menu.getMenu().add(list.get(i));
+                
+                menu.getMenu().add("Unfreeze");
 
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override

@@ -37,6 +37,7 @@ JNIEXPORT void JNICALL updateMods(JNIEnv *env, jobject instance, jint feature, j
             break;
 
         case 7:
+            freezePlayer = NULL;
             if (value > -1 && value < 10)
                 freezePlayer = players->m_Items[value];
             break;
