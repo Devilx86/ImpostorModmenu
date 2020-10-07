@@ -1,12 +1,12 @@
 # Dont use '~' write the full path or use $HOME
 APK="./amongus.apk"
-MOD_APK="$HOME/impostor-devilx86.apk"
+MOD_APK="$HOME/ApkProjects/ImpostorMenu/app/build/outputs/apk/release/app-release-unsigned.apk"
 
 # Signing configuration
 KEYSTORE="$HOME/keystore/ImpostorMenu.keystore"
 ALIAS="Devil"
 
-OUTPUT="$PWD/amongus-devilx86.apk"
+OUTPUT="$PWD/amongus-devilx86v1.2.apk"
 WDIR=`mktemp -d -p "/tmp/"`
 
 if [[ ! "$WDIR" || ! -d "$WDIR" ]]; then
@@ -67,24 +67,18 @@ echo ""
 echo "[+] Copying libraries"
 cp -r $MOD_APK/lib/* $APK/lib/
 
-# remove arm64
-#rm -rf $APK/lib/arm64-v8a
-
-# remove arm-v7a
-rm -rf $APK/lib/armeabi-v7a
-
 echo "[+] Copying assets"
 cp $MOD_APK/assets/* $APK/assets/
 
 echo "[+] Copying smali files"
-# USE PACKAGE NAME VARIABLE INSTEAD
+
 mkdir -p $APK/smali/com/devilx86/modmenu
 cp -r $MOD_APK/smali/com/devilx86/modmenu/Menu* $APK/smali/com/devilx86/modmenu
 
 echo "[+] Injecting startup code"
 LineNumber=$(($(cat $APK/smali/com/unity3d/player/UnityPlayerActivity.smali | grep -n "requestFocus()" | cut -f1 -d: | sort -u | head -n 1) - 1))
 inject_code="\n    invoke-static \{p0\}, Lcom\/devilx86\/modmenu\/MenuMain;->initModMenu(Landroid\/content\/Context;)V"
-# REPLACE PACKAGE NAME
+
 awk -v n=$LineNumber -v s="$inject_code" 'NR == n {print s} {print}' $APK/smali/com/unity3d/player/UnityPlayerActivity.smali > $APK/smali/com/unity3d/player/UnityPlayerActivity.smali.mod
 
 echo "[+] Diffing code modifications:"
@@ -94,6 +88,7 @@ mv $APK/smali/com/unity3d/player/UnityPlayerActivity.smali.mod $APK/smali/com/un
 echo ""
 echo "[+] Updating Manifest"
 cp $APK/AndroidManifest.xml $APK/AndroidManifest.xml.original
+
 # Modify manifest
 LineNumber=$(($(cat $APK/AndroidManifest.xml | grep -n "<uses-permission " | cut -f1 -d: | sort -u | head -n 1) + 1))
 inject_code="    <uses-permission android:name=\"android.permission.SYSTEM_ALERT_WINDOW\"\/>"
