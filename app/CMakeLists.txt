@@ -1,35 +1,27 @@
-# For more information about using CMake with Android Studio, read the
-# documentation: https://d.android.com/studio/projects/add-native-code.html
-
-# Sets the minimum version of CMake required to build the native library.
-
 cmake_minimum_required(VERSION 3.4.1)
 
 set(CMAKE_SYSTEM_PROCESSOR arm)
-# Creates and names a library, sets it as either STATIC
-# or SHARED, and provides the relative paths to its source code.
-# You can define multiple libraries, and CMake builds them for you.
-# Gradle automatically packages shared libraries with your APK.
 
-add_library( # Sets the name of the library.
-             devilhook
+set(sources_files)
+list(APPEND sources_files src/main/cpp/main.cpp)
 
-             # Sets the library as a shared library.
-             SHARED
+set(include_dir)
 
-             # Provides a relative path to your source file(s).
-             src/main/cpp/main.cpp
+if ((${ANDROID_ABI} STREQUAL "arm64-v8a"))
+    list(APPEND sources_files src/main/cpp/And64InlineHook/And64InlineHook.cpp)
+    list(APPEND include_dir src/main/cpp/And64InlineHook)
 
-             src/main/cpp/And64InlineHook/And64InlineHook.cpp
-            )
+elseif (${ANDROID_ABI} STREQUAL "armeabi-v7a")
+    list(APPEND sources_files src/main/cpp/Substrate/SubstrateHook.cpp)
+    list(APPEND sources_files src/main/cpp/Substrate/SubstrateDebug.cpp)
+    list(APPEND sources_files src/main/cpp/Substrate/SubstratePosixMemory.cpp)
 
-include_directories("src/main/cpp/And64InlineHook")
+    list(APPEND include_dir src/main/cpp/Substrate)
+endif()
 
-# Searches for a specified prebuilt library and stores the path as a
-# variable. Because CMake includes system libraries in the search path by
-# default, you only need to specify the name of the public NDK library
-# you want to add. CMake verifies that the library exists before
-# completing its build.
+
+add_library( devilhook SHARED ${sources_files})
+include_directories(${include_files})
 
 find_library( # Sets the name of the path variable.
               log-lib
