@@ -1,4 +1,9 @@
-#include "And64InlineHook.hpp"
+#if defined(__aarch64__)
+#include "And64InlineHook/And64InlineHook.hpp"
+#else if defined(__ARM_ARCH_7A__)
+#include "Substrate/CydiaSubstrate.h"
+#endif
+
 #include "func.h"
 
 bool noEmergencyCoolDown = false;
@@ -45,6 +50,7 @@ PlayerControl_o *reportDeadPlayer = NULL;
 PlayerControl_o *murderPlayer = NULL;
 PlayerControl_o *completePlayerTasks = NULL;
 PlayerControl_o *attachLobbyToPlayer = NULL;
+PlayerControl_o *replacePlayer = NULL;
 
 PlayerControl_o *spoofChatPlayer = NULL;
 std::string message;
@@ -90,14 +96,6 @@ void PlayerControl_RpcSendChat(PlayerControl_o *instance, System_String_o *chatT
     old_PlayerControl_RpcSendChat(instance, chatText);
 }
 
-/*
-void (*old_EmergencyMinigame_Update)(EmergencyMinigame_o *instance);
-void EmergencyMinigame_Update(EmergencyMinigame_o *instance) {
-    if(noEmergencyCoolDown)
-        instance->ButtonActive = true;
-    old_EmergencyMinigame_Update(instance);
-}
-*/
 // Function Only called when you are host
 void (*old_PlayerControl_RpcSetInfected)(PlayerControl_o *instance, GameData_PlayerInfo_array *infected);
 void PlayerControl_RpcSetInfected(PlayerControl_o *instance, GameData_PlayerInfo_array *infected)
@@ -120,18 +118,6 @@ void ModFixedUpdate(PlayerControl_o *instance) {
         }
         getPlayersList = false;
     }
-
-    /* Client side only
-    if (orginalSpeed == 0.0f) {
-        orginalSpeed = instance->klass->static_fields->GameOptions->PlayerSpeedMod;
-    }
-
-
-    //3x Speed
-    if(speedMode) {
-        instance->klass->static_fields->GameOptions->PlayerSpeedMod = 3.0f;
-    }
-    */
 
     if(noEmergencyCoolDown) {
         instance->klass->static_fields->GameOptions->EmergencyCooldown = 0;
@@ -171,6 +157,8 @@ void ModFixedUpdate(PlayerControl_o *instance) {
                         pArray->m_Items[i]->nameText->Color = classPalette->static_fields->White;
                         if (showImpostors) {
                             pArray->m_Items[i]->nameText->Color = classPalette->static_fields->ImpostorRed;
+                            localPlayer->nameText;
+
                         }
                     }
                 }
@@ -238,7 +226,7 @@ void ModFixedUpdate(PlayerControl_o *instance) {
         if(sabotageLoop != -1 && sabotageTimer != 0) {
            if (get_delta(sabotageTimer, get_now_ms()) > 700) {
                 ShipStatus_o *shipInstance = amongUsClient->ShipPrefabs->_items->m_Items[0]->klass->static_fields->Instance;
-                rpcRepairSystem(shipInstance, 0x11, sabotageLoop);
+               rpcRepairSystem(shipInstance, 0x11, sabotageLoop);
                 sabotageLoop = -1;
             }
             sabotageTimer = get_now_ms();
@@ -253,23 +241,30 @@ void ModFixedUpdate(PlayerControl_o *instance) {
 
             /*
            // to toggle light switches
-           old_ShipStatus_RpcRepairSystem(shipInstance, 0x7, 0); // toggle first switch
-           old_ShipStatus_RpcRepairSystem(shipInstance, 0x7, 1); // toggle second switch
-           old_ShipStatus_RpcRepairSystem(shipInstance, 0x7, 2); // toggle third switch
-           old_ShipStatus_RpcRepairSystem(shipInstance, 0x7, 3); // toggle fourth switch
-           old_ShipStatus_RpcRepairSystem(shipInstance, 0x7, 4); // toggle fifth switch
+           rpcRepairSystem(shipInstance, 0x7, 0); // toggle first switch
+           rpcRepairSystem(shipInstance, 0x7, 1); // toggle second switch
+           rpcRepairSystem(shipInstance, 0x7, 2); // toggle third switch
+           rpcRepairSystem(shipInstance, 0x7, 3); // toggle fourth switch
+           rpcRepairSystem(shipInstance, 0x7, 4); // toggle fifth switch
            */
 
-            // Fix Reactor
-            // top side
+            // Simulate top side
             rpcRepairSystem(shipInstance, 0x3, 64);
             rpcRepairSystem(shipInstance, 0x3, 32);
-            // bottom side
+            // Simulate bottom side
             rpcRepairSystem(shipInstance, 0x3, 65);
             rpcRepairSystem(shipInstance, 0x3, 33);
 
-            // Communication fix
-            rpcRepairSystem(shipInstance, 0xF, 0);
+            // sometimes when a player is holding one of the sides
+            // try flipping
+            rpcRepairSystem(shipInstance, 0x3, 65);
+            rpcRepairSystem(shipInstance, 0x3, 33);
+
+            rpcRepairSystem(shipInstance, 0x3, 64);
+            rpcRepairSystem(shipInstance, 0x3, 32);
+
+            // Communication broken.. will look into it
+            rpcRepairSystem(shipInstance, 0xE, 0);
 
             repairLoop = false;
         }
@@ -298,7 +293,6 @@ void ModFixedUpdate(PlayerControl_o *instance) {
         }
 
         if(reportDeadPlayer != NULL) {
-            //rpcStartMeeting(startMeetingPlayer, startMeetingPlayer->_cachedData);
             cmdReportDead(reportDeadPlayer, reportDeadPlayer->_cachedData);
             reportDeadPlayer = NULL;
         }
@@ -498,6 +492,7 @@ void AmongUsClient_OnGameJoined (AmongUsClient_o *instance, System_String_o *gam
     teleportToPlayer = NULL;
     teleportToMe = NULL;
     teleportAllToPlayer = NULL;
+    replacePlayer = NULL;
 
     attachLobbyToPlayer = NULL;
     attachToPlayer = false;
@@ -586,7 +581,7 @@ void IntroCutscene_CoBegin(IntroCutscene_o *instance, System_Collections_Generic
     old_IntroCutscene_CoBegin(instance, yourTeam, isImpostor);
 }
 
-/* 10 ban antiban */
+/* 10 min ban antiban */
 bool (*old_StatsManager_getAmBanned)(StatsManager_o *instance);
 bool StatsManager_getAmBanned(StatsManager_o *instance) {
     bool AmBan = old_StatsManager_getAmBanned(instance);
@@ -606,9 +601,24 @@ bool StatsManager_getAmBanned(StatsManager_o *instance) {
     return AmBan;
 }
 
+void HookFunction(void *const symbol, void *const replace, void **result) {
+#if defined(__aarch64__)
+    A64HookFunction(symbol, replace, result);
+#else if defined(__ARM_ARCH_7A__)
+    MSHookFunction(symbol, replace, result);
+#endif
+}
+
 void applyHooks() {
-    /* shellcodes */
+#if defined(__aarch64__)
+    // shellcodes for arm64
     char sc_ret_1[] = "\x20\x00\x80\xD2\xC0\x03\x5F\xD6";
+    LOGD("Arm64-v8a version");
+#else if defined(__ARM_ARCH_7A__)
+    // shellcode for armeabi-v7a
+    char sc_ret_1[] = "\x01\x00\xA0\xE3\x1E\xFF\x2F\xE1";
+    LOGD("Arm-V7a version");
+#endif
 
     bool isDone = false;
     /* Patching certain functions initially */
@@ -626,63 +636,63 @@ void applyHooks() {
         if(*old_ChatController_SetVisible == NULL) {
             LOGD("Failed to hook ChatController_SetVisible");
             isDone = false;
-            A64HookFunction(getAbsoluteAddress(offsets.chatSetVisible),
+            HookFunction(getAbsoluteAddress(offsets.chatSetVisible),
                             (void *) &ChatController_SetVisible,
                             (void **) &old_ChatController_SetVisible);
         }
         if(*old_PlayerControl_RpcSetInfected == NULL) {
             LOGD("Failed to hook RpcSetInfected");
             isDone = false;
-            A64HookFunction(getAbsoluteAddress(offsets.rpcSetInfected),
+            HookFunction(getAbsoluteAddress(offsets.rpcSetInfected),
                             (void *) &PlayerControl_RpcSetInfected,
                             (void **) &old_PlayerControl_RpcSetInfected);
         }
         if(*old_IntroCutscene_CoBegin == NULL) {
             LOGD("Failed to hook IntroCutscene");
             isDone = false;
-            A64HookFunction(getAbsoluteAddress(offsets.introCoBegin),
+            HookFunction(getAbsoluteAddress(offsets.introCoBegin),
                             (void *) &IntroCutscene_CoBegin,
                             (void **) &old_IntroCutscene_CoBegin);
         }
         if(*old_PlayerControl_FixedUpdate == NULL) {
             LOGD("Failed to hook playerControl_getData");
             isDone = false;
-            A64HookFunction(getAbsoluteAddress(offsets.pcFixedUpdate),
+            HookFunction(getAbsoluteAddress(offsets.pcFixedUpdate),
                             (void *) &PlayerControl_FixedUpdate,
                             (void **) &old_PlayerControl_FixedUpdate);
         }
         if(*old_StatsManager_getAmBanned == NULL) {
             LOGD("Failed to hook getAmBanned");
             isDone = false;
-            A64HookFunction(getAbsoluteAddress(offsets.getAmBanned),
+            HookFunction(getAbsoluteAddress(offsets.getAmBanned),
                             (void *) &StatsManager_getAmBanned,
                             (void **) &old_StatsManager_getAmBanned);
         }
         if(*old_InnerNetClient_FixedUpdate == NULL) {
             LOGD("Failed to hook innerNetFixedUpdate");
             isDone = false;
-            A64HookFunction(getAbsoluteAddress(offsets.netFixedUpdate),
+            HookFunction(getAbsoluteAddress(offsets.netFixedUpdate),
                             (void *) &InnerNetClient_FixedUpdate,
                             (void **) &old_InnerNetClient_FixedUpdate);
         }
         if(*old_MeetingHud_Update == NULL) {
             LOGD("Failed to hook meetingHudUpdate");
             isDone = false;
-            A64HookFunction(getAbsoluteAddress(offsets.meetingHudUpdate),
+            HookFunction(getAbsoluteAddress(offsets.meetingHudUpdate),
                             (void *) &MeetingHud_Update,
                             (void **) &old_MeetingHud_Update);
         }
         if(*old_PlayerControl_RpcSendChat == NULL) {
             LOGD("Failed to hook PlayerControl_RpcSendChat");
             isDone = false;
-            A64HookFunction(getAbsoluteAddress(offsets.rpcSendChat),
+            HookFunction(getAbsoluteAddress(offsets.rpcSendChat),
                             (void *) &PlayerControl_RpcSendChat,
                             (void **) &old_PlayerControl_RpcSendChat);
         }
         if(*old_AmongUsClient_OnGameJoined == NULL) {
             LOGD("Failed to hook AmongUsClient_OnGameJoined");
             isDone = false;
-            A64HookFunction(getAbsoluteAddress(offsets.onGameJoined),
+            HookFunction(getAbsoluteAddress(offsets.onGameJoined),
                             (void*) AmongUsClient_OnGameJoined,
                             (void**) &old_AmongUsClient_OnGameJoined);
         }
@@ -690,20 +700,10 @@ void applyHooks() {
         if(*old_VoteBanSystem_Awake == NULL) {
             LOGD("Failed to hook VoteBanSystem_Awake");
             isDone = false;
-            A64HookFunction(getAbsoluteAddress(offsets.voteBanAwake),
+            HookFunction(getAbsoluteAddress(offsets.voteBanAwake),
                             (void*) VoteBanSystem_Awake,
                             (void**) &old_VoteBanSystem_Awake);
         }
-
-        /*
-        if(*old_EmergencyMinigame_Update == NULL) {
-            LOGD("Failed to hook EmergencyMinigame_Update");
-            isDone = false;
-            A64HookFunction(getAbsoluteAddress(offsets.voteBanAwake),
-                            (void*) EmergencyMinigame_Update,
-                            (void**) &old_EmergencyMinigame_Update);
-        }
-        */
 
     } while(!isDone);
 

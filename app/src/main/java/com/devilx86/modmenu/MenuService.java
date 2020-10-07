@@ -32,7 +32,7 @@ import java.util.List;
 
 public class MenuService extends Service {
     private final String TAG = "IMPOSTORMENU";
-    private final String MENU_TITLE = "Impostor Modmenu v1.1";
+    private final String MENU_TITLE = "Impostor Modmenu v1.2";
     private final String MENU_AUTHOR = "Devilx86";
     private final String MENU_FOOTER = "www.github.com/" + MENU_AUTHOR;
 
@@ -47,19 +47,8 @@ public class MenuService extends Service {
         switchBtn.setTextSize(18.0f);
         switchBtn.setBackgroundColor(Color.parseColor("#171E24"));
         switchBtn.setTextColor(Color.parseColor("#DEEDF6"));
-        switchBtn.setPadding(10, 5, 0, 10);
-        switchBtn.setText(text);
-        switchBtn.setOnCheckedChangeListener(on);
-        mMenuBody.addView(switchBtn);
-    }
-
-    private void addSwitch(String text, boolean isChecked, Switch.OnCheckedChangeListener on) {
-        Switch switchBtn = new Switch(getBaseContext());
-        switchBtn.setTextSize(18.0f);
-        switchBtn.setChecked(isChecked);
-        switchBtn.setBackgroundColor(Color.parseColor("#171E24"));
-        switchBtn.setTextColor(Color.parseColor("#DEEDF6"));
-        switchBtn.setPadding(10, 5, 0, 10);
+        switchBtn.setPadding(10, 20, 0, 20);
+        switchBtn.setSwitchPadding(10);
         switchBtn.setText(text);
         switchBtn.setOnCheckedChangeListener(on);
         mMenuBody.addView(switchBtn);
@@ -70,28 +59,26 @@ public class MenuService extends Service {
         label.setTextColor(Color.WHITE);
         label.setTextSize(18.0f);
         label.setBackgroundColor(Color.parseColor("#171E24"));
-        label.setPadding(10, 5, 0, 10);
+        label.setPadding(10, 20, 0, 20);
         label.setText(text);
-        label.setOnClickListener(on);
-        label.setClickable(true);
-        /*
         label.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction())
-                {
+                switch(event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         v.setBackgroundColor(Color.GRAY);
                         break;
                     case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_MOVE:
+                    case MotionEvent.ACTION_CANCEL:
                         v.setBackgroundColor(Color.parseColor("#171E24"));
                         break;
                 }
-                return true;
+                return false;
             }
         });
-        */
+        label.setOnClickListener(on);
+        label.setClickable(true);
+
         mMenuBody.addView(label);
     }
 
@@ -100,6 +87,7 @@ public class MenuService extends Service {
         label.setTextColor(Color.WHITE);
         label.setTextSize(18.0f);
         label.setBackgroundColor(Color.BLACK);
+        label.setPadding(10, 20, 0, 20);
         label.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
         label.setPadding(10, 5, 0, 10);
         label.setText(text);
@@ -177,12 +165,12 @@ public class MenuService extends Service {
             }
         });
 
-
         addSubtitle("Player Options");
         addItem("Teleport to Player", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final PopupMenu menu = new PopupMenu(getBaseContext(), v);
+
                 final List<String> list = Arrays.asList(getPlayerNames());
 
                 for(int i = 0; i < list.size(); i++)
@@ -702,7 +690,6 @@ public class MenuService extends Service {
 
             mCollapsed.addView(mMenuHeadImageView);
 
-            // COPY PASTE
             mExpanded.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             mExpanded.setOrientation(LinearLayout.VERTICAL);
             mExpanded.setPadding(10, 0, 10, 0);
@@ -711,7 +698,8 @@ public class MenuService extends Service {
 
             mMenuBody.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, 200));
             mMenuBody.setOrientation(LinearLayout.VERTICAL);
-            mMenuBody.setBackgroundColor(Color.parseColor("#171E24"));
+            mMenuBody.setBackgroundColor(Color.BLACK);
+            //mMenuBody.setBackgroundColor(Color.parseColor("#171E24"));
 
             //children of layout2 LinearLayout
 

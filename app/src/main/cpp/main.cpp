@@ -181,6 +181,15 @@ JNIEXPORT void JNICALL updateMods(JNIEnv *env, jobject instance, jint feature, j
                 colorStartTime = get_now_ms();
             }
             break;
+
+/*
+        case 31:
+            if (value > -1 && value < 10) {
+                replacePlayer = players->m_Items[value];
+            }
+            break;
+
+    */
     }
 }
 
