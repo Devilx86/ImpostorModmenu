@@ -59,6 +59,7 @@ A short demo: https://www.youtube.com/watch?v=zrc_FMnWyRM&feature=youtu.be
 
 ## Injecting Menu
 - Compile the menu in android studio or download the release build.
+- Install apktool version 2.4.1 (or you may have issues when compiling the apk back)
 - Edit inject-apk.sh with path to amongus apk, the menu build and a keystore if you want the script to sign the build for you.
 - run ./inject-apk.sh
 - This will output an injected version of the game.
@@ -67,7 +68,7 @@ A short demo: https://www.youtube.com/watch?v=zrc_FMnWyRM&feature=youtu.be
 - Install the apk
 - Accept draw over app permission
 - close app and clear task
-- Tap open app 2 to 3 times, this is because its loading the base address of the game library.
+- Tap the app icon 2 to 3 times, this is because its loading the base address of the game library.
 - If all goes well, you should see the menu now.
 
 ## Credits
