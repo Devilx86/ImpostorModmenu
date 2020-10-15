@@ -10,3 +10,4 @@ are posting Features reauest then add in tittle "Features request (add here supp
 6.Do not post any NSFW or porn its cheaters community not porn community 
 7.Please do not swear 
 Rules by milionerzy11
+
