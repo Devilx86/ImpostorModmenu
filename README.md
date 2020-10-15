@@ -93,6 +93,7 @@ v1.3 (buggy) (can be found only here bc of glitches: https://polarmods.com/threa
 
 
 5. If you are not reporting bugs, glitches or issue but youre reporting features request or fix features request then please add in tittle that "Fix Features (add here supported version number) request" or if you 
+are posting Features request then add in tittle "Features request (add here supported version number)
 
 
 
