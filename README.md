@@ -2,13 +2,19 @@
 Mod menu for Among Us on Android
 All features except for force impostor work without being the host and is visible to other clients in the game.
 
-Official Post: https://polarmods.com/threads/among-us-imposter-modmenu-for-android-arm64-teleport-freeze-attach-kick-and-more.951/#post-28402
+- Official Download (v1.3): http://www.mediafire.com/file/368z830bboluaw9/amongus-impostor-v1.3-fixed.apk/file
+- Official Post(v1.3): https://polarmods.com/threads/among-us-imposter-modmenu-for-android-arm64-teleport-freeze-attach-kick-and-more.951/#post-28402
+
+- A short demo(v1.1): https://www.youtube.com/watch?v=zrc_FMnWyRM&feature=youtu.be
 
 Self
+- Player Speed - Thanks to @Revasnake
+- Max Light Range - Thanks to @Revasnake
 - Fake Impostor
 - No Kill Cooldown
 - Show Impostors
 - No Emergency Cooldown
+- Wallhack
 - Color Cycler (Constantly Cycle through different player colors)
 
 Player Options
@@ -19,21 +25,13 @@ Player Options
 - Attach Player to me
 - Spoof Message ( talk on chat as any other player)
 - Kick Player (Kick anyone except for the host)
+- Skip Vote
 - Cast Vote
 - Report Dead
 - Blame Murder Player (Make an impostor other than yourself kill the selected player)
 - Murder Player as me (Kill a selected player if you are the impostor)
 - Complete Player Tasks
-
-Lobby
-- Force Impostor (Host only)
-- Attach Lobby Behind
-- Teleport All to me
-- Teleport All to player
-- Freeze All Players positions
-- Blame Murder Crew (Make an impostor other than yourself kill the entire crew)
-- Me Murder Crew (Make yourself kill the crew if you are the impostor)
-- Murder Impostors (Make the impostors kill themselves)
+- Copy Player Outfit
 
 Ship
 - Lock All Doors
@@ -45,17 +43,37 @@ Ship
 - Play Trash Animation
 - Advertise Menu
 
+Lobby
+- Force Impostor (Host only)
+- Impostor Count (Host) -- Thanks to @Revasnake
+- Select Impostor 1 (Host)
+- Select Impostor 2 (host)
+- Select Impostor 3 (host)
+- Attach Lobby Plus
+- Attach Lobby Behind
+- Teleport All to me
+- Teleport All to player
+- Freeze All Players positions
+- Blame Murder Crew (Make an impostor other than yourself kill the entire crew)
+- Me Murder Crew (Make yourself kill the crew if you are the impostor)
+- Murder Impostors (Make the impostors kill themselves)
+- Freeze Last Murderer
+- Teleport All to Murderer
+-  Random Skin Changer -- Thanks to @Revasnake
+- Random Pet Changer -- Thanks to @Revasnake
+- Random Hat Changer -- Thanks to @Revasnake
+- Random Color Changer (Host) -- Thanks to @Revasnake
 
 Passive features included by default:
 - Unlock All Hats
 - Unlock All Skins
 - Unlock All Pets
+- Move in Meeting -- Thanks to @Revasnake
+- TextBox Character limit/Symbols -- Thanks to @Revasnake
 - Always Enable Chat
 - 10 min Antiban
 - See Ghosts
 - No Ads
-
-A short demo: https://www.youtube.com/watch?v=zrc_FMnWyRM&feature=youtu.be
 
 ## Injecting Menu
 - Compile the menu in android studio or download the release build.
@@ -73,5 +91,6 @@ A short demo: https://www.youtube.com/watch?v=zrc_FMnWyRM&feature=youtu.be
 
 ## Credits
 - Devilx86
-- Rprop And64InlineHook
-- Cydia Substrate
+- [RevASnake](https://polarmods.com/members/revasnake.1/)
+- [Rprop And64InlineHook](https://github.com/Rprop/And64InlineHook)
+- [Cydia Substrate](http://www.cydiasubstrate.com/)
