@@ -8,6 +8,8 @@ import android.graphics.PixelFormat;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.IBinder;
+import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -21,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,9 +35,16 @@ import java.util.List;
 
 public class MenuService extends Service {
     private final String TAG = "IMPOSTORMENU";
-    private final String MENU_TITLE = "Impostor Modmenu v1.2";
+    private final String MENU_TITLE = "Impostor Modmenu v1.3";
     private final String MENU_AUTHOR = "Devilx86";
-    private final String MENU_FOOTER = "www.github.com/" + MENU_AUTHOR;
+    private final String CONTRIBUTORS = "RevAsnake, Rprop, Cydia Substrate";
+    private final String MENU_FOOTER = "<marquee><p style=\"font-size:30\">"
+                                        + "<br>"
+                                        + "Modded by" + "<p style=\"color:red;\">" + MENU_AUTHOR + "</p> | "
+                                        + "<p style=\"color:red;\">" + "https://github.com/Devilx86</p> | "
+                                        + "Thanks to " + CONTRIBUTORS + " |"
+                                        + "</p></marquee>";
+
 
     public native String[] getPlayerNames();
 
@@ -95,6 +105,43 @@ public class MenuService extends Service {
         mMenuBody.addView(label);
     }
 
+    private void addSeekBar(final String text, final int min, final int max, final int arg1) {
+        final TextView label = new TextView(getBaseContext());
+        label.setTextColor(Color.WHITE);
+        label.setTextSize(18.0f);
+        label.setBackgroundColor(Color.parseColor("#171E24"));
+        label.setPadding(10, 20, 0, 20);
+        label.setText(text + ": ");
+        mMenuBody.addView(label);
+
+        SeekBar seekBar = new SeekBar(getBaseContext());
+        seekBar.setProgress(min);
+        seekBar.setMax(max);
+        seekBar.setBackgroundColor(Color.parseColor("#171E24"));
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int value, boolean b) {
+                if(value < min) {
+                    value = min;
+                    seekBar.setProgress(value);
+                }
+                updateMods(arg1, value);
+                label.setText(text + ": " + value);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        mMenuBody.addView(seekBar);
+    }
+
     private void createMenu() {
         Log.d(TAG, "Creating Menu header");
 
@@ -122,7 +169,10 @@ public class MenuService extends Service {
         Log.d(TAG, "Creating Menu Footer");
         // Menu Footer
         TextView footer = new TextView(getBaseContext());
-        footer.setText(MENU_FOOTER);
+        footer.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        footer.setSingleLine(true);
+        footer.setSelected(true);
+        footer.setText(Html.fromHtml(MENU_FOOTER));
         footer.setTextColor(Color.GRAY);
         footer.setBackgroundColor(Color.BLACK);
         footer.setTypeface(Typeface.DEFAULT_BOLD);
@@ -134,13 +184,21 @@ public class MenuService extends Service {
 
     private void createMenuBody() {
         addSubtitle("Self");
+        addSeekBar("Player Speed", 0, 100, 46);
+        addItem("Max Light Range", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateMods(47, 2000);
+            }
+        });
         addSwitch("Fake Impostor", new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 updateMods(1, isChecked ? 1 : 0);
             }
         });
-        addSwitch("No Kill cooldown", new CompoundButton.OnCheckedChangeListener() {
+
+        addSwitch("No Kill Cooldown", new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 updateMods(2, isChecked ? 1 : 0);
@@ -158,10 +216,17 @@ public class MenuService extends Service {
                 updateMods(4, isChecked ? 1 : 0);
             }
         });
+        addSwitch("Wall Hack", new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateMods(5, isChecked ? 1 : 0);
+            }
+        });
+
         addSwitch("Color Cycler", new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                updateMods(30, isChecked ? 1 : 0);
+                updateMods(6, isChecked ? 1 : 0);
             }
         });
 
@@ -179,8 +244,8 @@ public class MenuService extends Service {
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        if(menuItem.getTitle() != "-") {
-                            updateMods(5, list.indexOf(menuItem.getTitle()));
+                       if(!menuItem.getTitle().equals("-")) {
+                            updateMods(7, list.indexOf(menuItem.getTitle()));
                         }
                         return false;
                     }
@@ -201,8 +266,8 @@ public class MenuService extends Service {
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        if(menuItem.getTitle() != "-") {
-                            updateMods(6, list.indexOf(menuItem.getTitle()));
+                       if(!menuItem.getTitle().equals("-")) {
+                            updateMods(8, list.indexOf(menuItem.getTitle()));
                         }
                         return false;
                     }
@@ -220,14 +285,13 @@ public class MenuService extends Service {
                 final List<String> list = l;
                 for(int i = 0; i < list.size(); i++)
                     menu.getMenu().add(list.get(i));
-                
-                menu.getMenu().add("Unfreeze");
 
+                menu.getMenu().add("Unfreeze");
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        if(menuItem.getTitle() != "-") {
-                            updateMods(7, list.indexOf(menuItem.getTitle()));
+                       if(!menuItem.getTitle().equals("-")) {
+                            updateMods(9, list.indexOf(menuItem.getTitle()));
                         }
                         return false;
                     }
@@ -249,8 +313,8 @@ public class MenuService extends Service {
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        if(menuItem.getTitle() != "-") {
-                            updateMods(8, list.indexOf(menuItem.getTitle()));
+                       if(!menuItem.getTitle().equals("-")) {
+                            updateMods(10, list.indexOf(menuItem.getTitle()));
                         }
                         return false;
                     }
@@ -272,8 +336,8 @@ public class MenuService extends Service {
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        if(menuItem.getTitle() != "-") {
-                            updateMods(9, list.indexOf(menuItem.getTitle()));
+                       if(!menuItem.getTitle().equals("-")) {
+                            updateMods(11, list.indexOf(menuItem.getTitle()));
                         }
                         return false;
                     }
@@ -294,10 +358,10 @@ public class MenuService extends Service {
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        if(menuItem.getTitle() != "-") {
+                       if(!menuItem.getTitle().equals("-")) {
                             final int index = list.indexOf(menuItem.getTitle());
 
-                            updateMods(10, list.indexOf(menuItem.getTitle()));
+                            updateMods(12, list.indexOf(menuItem.getTitle()));
                             //String message = "Hello";
                             //sendMessage(playerIndex , message, message.length());
                         }
@@ -323,7 +387,7 @@ public class MenuService extends Service {
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        if(menuItem.getTitle() != "-") {
+                       if(!menuItem.getTitle().equals("-")) {
                             final int index = list.indexOf(menuItem.getTitle());
 
                             updateMods(9, list.indexOf(menuItem.getTitle()));
@@ -348,13 +412,20 @@ public class MenuService extends Service {
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        if(menuItem.getTitle() != "-") {
-                            updateMods(11, list.indexOf(menuItem.getTitle()));
+                       if(!menuItem.getTitle().equals("-")) {
+                            updateMods(13, list.indexOf(menuItem.getTitle()));
                         }
                         return false;
                     }
                 });
                 menu.show();
+            }
+        });
+
+        addSwitch("Skip Vote", new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateMods(14, isChecked ? 1 : 0);
             }
         });
 
@@ -373,8 +444,8 @@ public class MenuService extends Service {
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        if(menuItem.getTitle() != "-") {
-                            updateMods(12, list.indexOf(menuItem.getTitle()));
+                       if(!menuItem.getTitle().equals("-")) {
+                            updateMods(15, list.indexOf(menuItem.getTitle()));
                         }
                         return false;
                     }
@@ -395,10 +466,10 @@ public class MenuService extends Service {
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        if(menuItem.getTitle() != "-") {
+                       if(!menuItem.getTitle().equals("-")) {
                             final int index = list.indexOf(menuItem.getTitle());
 
-                            updateMods(13, list.indexOf(menuItem.getTitle()));
+                            updateMods(16, list.indexOf(menuItem.getTitle()));
                         }
                         return false;
                     }
@@ -407,6 +478,31 @@ public class MenuService extends Service {
             }
         });
 
+        /*
+        addItem("Revive Player [Host]", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final PopupMenu menu = new PopupMenu(getBaseContext(), v);
+                final List<String> list = Arrays.asList(getPlayerNames());
+
+                for(int i = 0; i < list.size(); i++)
+                    menu.getMenu().add(list.get(i));
+
+                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                       if(!menuItem.getTitle().equals("-")) {
+                            final int index = list.indexOf(menuItem.getTitle());
+
+                            updateMods(17, list.indexOf(menuItem.getTitle()));
+                        }
+                        return false;
+                    }
+                });
+                menu.show();
+            }
+        });
+*/
 
         addItem("Blame Murder Player", new View.OnClickListener() {
             @Override
@@ -420,10 +516,10 @@ public class MenuService extends Service {
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        if(menuItem.getTitle() != "-") {
+                       if(!menuItem.getTitle().equals("-")) {
                             final int index = list.indexOf(menuItem.getTitle());
 
-                            updateMods(14, list.indexOf(menuItem.getTitle()));
+                            updateMods(18, list.indexOf(menuItem.getTitle()));
                         }
                         return false;
                     }
@@ -444,10 +540,10 @@ public class MenuService extends Service {
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        if(menuItem.getTitle() != "-") {
+                       if(!menuItem.getTitle().equals("-")) {
                             final int index = list.indexOf(menuItem.getTitle());
 
-                            updateMods(15, list.indexOf(menuItem.getTitle()));
+                            updateMods(19, list.indexOf(menuItem.getTitle()));
                         }
                         return false;
                     }
@@ -468,70 +564,9 @@ public class MenuService extends Service {
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        if(menuItem.getTitle() != "-") {
+                       if(!menuItem.getTitle().equals("-")) {
                             final int index = list.indexOf(menuItem.getTitle());
 
-                            updateMods(16, list.indexOf(menuItem.getTitle()));
-                        }
-                        return false;
-                    }
-                });
-                menu.show();
-            }
-        });
-
-        addSubtitle("Lobby");
-        addSwitch("Force Impostor [Host]", new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                updateMods(17, isChecked ? 1 : 0);
-            }
-        });
-
-        addItem("Attach Lobby Behind", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final PopupMenu menu = new PopupMenu(getBaseContext(), v);
-                final List<String> list = Arrays.asList(getPlayerNames());
-
-                for(int i = 0; i < list.size(); i++)
-                    menu.getMenu().add(list.get(i));
-
-                menu.getMenu().add("Detach");
-                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        if(menuItem.getTitle() != "-") {
-                            updateMods(18, list.indexOf(menuItem.getTitle()));
-                        }
-                        return false;
-                    }
-                });
-                menu.show();
-            }
-        });
-
-        // Quicker way than all to player
-        addItem("Teleport All to me", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateMods(19, 1);
-            }
-        });
-
-        addItem("Teleport All to player", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final PopupMenu menu = new PopupMenu(getBaseContext(), v);
-                final List<String> list = Arrays.asList(getPlayerNames());
-
-                for(int i = 0; i < list.size(); i++)
-                    menu.getMenu().add(list.get(i));
-
-                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        if(menuItem.getTitle() != "-") {
                             updateMods(20, list.indexOf(menuItem.getTitle()));
                         }
                         return false;
@@ -541,31 +576,27 @@ public class MenuService extends Service {
             }
         });
 
-        addSwitch("Freeze All Players", new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                updateMods(21, isChecked ? 1 : 0);
-            }
-        });
-
-        addItem("Blame Murder Crew", new View.OnClickListener() {
+        addItem("Copy Player", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateMods(22, 1);
-            }
-        });
+                final PopupMenu menu = new PopupMenu(getBaseContext(), v);
+                final List<String> list = Arrays.asList(getPlayerNames());
 
-        addItem("Me Murder Crew", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateMods(23, 1);
-            }
-        });
-
-        addItem("Murder Impostors", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateMods(24, 1);
+                for(int i = 0; i < list.size(); i++) {
+                    menu.getMenu().add(list.get(i));
+                    Log.d(TAG, "" + list.get(i));
+                }
+                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                       if(!menuItem.getTitle().equals("-")) {
+                            final int index = list.indexOf(menuItem.getTitle());
+                            updateMods(21, list.indexOf(menuItem.getTitle()));
+                        }
+                        return false;
+                    }
+                });
+                menu.show();
             }
         });
 
@@ -574,7 +605,7 @@ public class MenuService extends Service {
         addSwitch("Lock All Doors", new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                updateMods(26, isChecked ? 1 : 0);
+                updateMods(22, isChecked ? 1 : 0);
             }
         });
 
@@ -591,7 +622,7 @@ public class MenuService extends Service {
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        updateMods(27, list.indexOf(menuItem.getTitle()));
+                        updateMods(23, list.indexOf(menuItem.getTitle()));
                         return false;
                     }
                 });
@@ -602,42 +633,277 @@ public class MenuService extends Service {
         addItem("Sabotage all", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateMods(25, 1);
+                updateMods(24, 1);
             }
         });
 
         addItem("Repair (o2, com, rea)", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateMods(28, 1);
+                updateMods(25, 1);
             }
         });
 
         addItem("Play Shield Animation", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateMods(29, 1);
+                updateMods(26, 1);
             }
         });
 
         addItem("Play Weapons Animation", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateMods(29, 6);
+                updateMods(26, 6);
             }
         });
 
         addItem("Play Trash Animation", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateMods(29, 10);
+                updateMods(26, 10);
+            }
+        });
+
+        addSubtitle("Lobby");
+        addSwitch("Force Impostor [Host]", new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateMods(28, isChecked ? 1 : 0);
+            }
+        });
+
+        addSeekBar("Impostor Count [Host]", 0, 3, 27);
+        addItem("Select Impostor 1 [Host]", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final PopupMenu menu = new PopupMenu(getBaseContext(), v);
+                final List<String> list = Arrays.asList(getPlayerNames());
+
+                for(int i = 0; i < list.size(); i++)
+                    menu.getMenu().add(list.get(i));
+
+                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                       if(!menuItem.getTitle().equals("-")) {
+                            updateMods(29, list.indexOf(menuItem.getTitle()));
+                        }
+                        return false;
+                    }
+                });
+                menu.show();
+            }
+        });
+
+
+        addItem("Select Impostor 2 [Host]", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final PopupMenu menu = new PopupMenu(getBaseContext(), v);
+                final List<String> list = Arrays.asList(getPlayerNames());
+
+                for(int i = 0; i < list.size(); i++)
+                    menu.getMenu().add(list.get(i));
+
+                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                       if(!menuItem.getTitle().equals("-")) {
+                            updateMods(30, list.indexOf(menuItem.getTitle()));
+                        }
+                        return false;
+                    }
+                });
+                menu.show();
+            }
+        });
+
+
+        addItem("Select Impostor 3 [Host]", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final PopupMenu menu = new PopupMenu(getBaseContext(), v);
+                final List<String> list = Arrays.asList(getPlayerNames());
+
+                for(int i = 0; i < list.size(); i++)
+                    menu.getMenu().add(list.get(i));
+
+                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                       if(!menuItem.getTitle().equals("-")) {
+                            updateMods(31, list.indexOf(menuItem.getTitle()));
+                        }
+                        return false;
+                    }
+                });
+                menu.show();
+            }
+        });
+
+        addItem("Attach Lobby Plus", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final PopupMenu menu = new PopupMenu(getBaseContext(), v);
+                final List<String> list = Arrays.asList(getPlayerNames());
+
+                for(int i = 0; i < list.size(); i++)
+                    menu.getMenu().add(list.get(i));
+
+                menu.getMenu().add("Detach");
+                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                       if(!menuItem.getTitle().equals("-")) {
+                            updateMods(32, list.indexOf(menuItem.getTitle()));
+                        }
+                        return false;
+                    }
+                });
+                menu.show();
+            }
+        });
+
+        addItem("Attach Lobby Behind", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final PopupMenu menu = new PopupMenu(getBaseContext(), v);
+                final List<String> list = Arrays.asList(getPlayerNames());
+
+                for(int i = 0; i < list.size(); i++)
+                    menu.getMenu().add(list.get(i));
+
+                menu.getMenu().add("Detach");
+                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                       if(!menuItem.getTitle().equals("-")) {
+                            updateMods(33, list.indexOf(menuItem.getTitle()));
+                        }
+                        return false;
+                    }
+                });
+                menu.show();
+            }
+        });
+
+        // Quicker way than all to player
+        addItem("Teleport All to me", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateMods(34, 1);
+            }
+        });
+
+        addItem("Teleport All to player", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final PopupMenu menu = new PopupMenu(getBaseContext(), v);
+                final List<String> list = Arrays.asList(getPlayerNames());
+
+                for(int i = 0; i < list.size(); i++)
+                    menu.getMenu().add(list.get(i));
+
+                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                       if(!menuItem.getTitle().equals("-")) {
+                            updateMods(35, list.indexOf(menuItem.getTitle()));
+                        }
+                        return false;
+                    }
+                });
+                menu.show();
+            }
+        });
+
+        addSwitch("Freeze All Players", new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateMods(36, isChecked ? 1 : 0);
+            }
+        });
+
+        addItem("Blame Murder Crew", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateMods(37, 1);
+            }
+        });
+
+        addItem("Me Murder Crew", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateMods(38, 1);
+            }
+        });
+
+        addItem("Murder Impostors", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateMods(39, 1);
+            }
+        });
+
+        addSwitch("Freeze last murderer", new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateMods(40, isChecked ? 1 : 0);
+            }
+        });
+
+        addSwitch("Teleport all to Murderer", new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateMods(41, isChecked ? 1 : 0);
+            }
+        });
+
+        addSwitch("Random Skin Changer", new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateMods(42, isChecked ? 1 : 0);
+            }
+        });
+
+        addSwitch("Random Pet Changer", new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateMods(43, isChecked ? 1 : 0);
+            }
+        });
+
+        addSwitch("Random Hat Changer", new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateMods(44, isChecked ? 1 : 0);
+            }
+        });
+
+        addSwitch("Random Colour Changer [Host]", new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateMods(45, isChecked ? 1 : 0);
             }
         });
 
         addItem("Advertise Menu", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendLobbyMessage(MENU_TITLE + " by " + MENU_AUTHOR);
+                sendLobbyMessage(MENU_TITLE + " By " + MENU_AUTHOR);
+            }
+        });
+
+
+        addItem("Hide/Unhide icon", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isMenuIconVisible = !isMenuIconVisible;
+                if(!isMenuIconVisible)
+                    mMenuHeadImageView.setAlpha(0.8f);
+                else
+                    mMenuHeadImageView.setAlpha(0.0f);
             }
         });
 
@@ -657,6 +923,7 @@ public class MenuService extends Service {
     private RelativeLayout mCollapsed;
     private LinearLayout mExpanded;
     private LinearLayout mMenuBody;
+    private boolean isMenuIconVisible = true;
 
     private void initFloatingView() {
         AssetManager assetManager = getBaseContext().getAssets();
@@ -674,8 +941,8 @@ public class MenuService extends Service {
             When any number -3 or lower is applied, the behavior is the same
             as wrap_content.
          */
-        rootFrame.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT));
-        mRootContainer.setLayoutParams(new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        rootFrame.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+        mRootContainer.setLayoutParams(new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         mRootContainer.setOrientation(LinearLayout.HORIZONTAL);
         mCollapsed.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
 
@@ -696,7 +963,7 @@ public class MenuService extends Service {
             mExpanded.setBackgroundColor(Color.BLACK);
             mExpanded.setAlpha(0.7f);
 
-            mMenuBody.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, 200));
+            mMenuBody.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT));
             mMenuBody.setOrientation(LinearLayout.VERTICAL);
             mMenuBody.setBackgroundColor(Color.BLACK);
             //mMenuBody.setBackgroundColor(Color.parseColor("#171E24"));
@@ -718,6 +985,17 @@ public class MenuService extends Service {
             */
 
             // add views
+            /*
+            TextView lobbyInfo = new TextView(getBaseContext());
+            lobbyInfo.setTextColor(Color.BLACK);
+            lobbyInfo.setBackgroundColor(Color.WHITE);
+            lobbyInfo.setText("Lobby Info\nPlayer 1\nPlayer 2");
+            lobbyInfo.setGravity(Gravity.RIGHT);
+            lobbyInfo.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            lobbyInfo.setClickable(false);
+
+            mCollapsed.addView(lobbyInfo);
+            */
             mRootContainer.addView(mCollapsed);
             mRootContainer.addView(mExpanded);
             rootFrame.addView(mRootContainer);

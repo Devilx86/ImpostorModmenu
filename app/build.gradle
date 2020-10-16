@@ -1,21 +1,19 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 30
     defaultConfig {
         applicationId "com.devilx86.modmenu"
-        minSdkVersion 23
-        targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion 14
+        targetSdkVersion 30
+        versionCode 2
+        versionName "1.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
                 cppFlags ""
             }
             ndk {
-                // Specifies the ABI configurations of your native
-                // libraries Gradle should build and package with your APK.
                 abiFilters 'arm64-v8a', 'armeabi-v7a'
             }
         }
@@ -31,11 +29,13 @@ android {
             path "CMakeLists.txt"
         }
     }
+    productFlavors {
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'

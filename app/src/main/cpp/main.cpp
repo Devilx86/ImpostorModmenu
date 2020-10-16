@@ -27,22 +27,38 @@ JNIEXPORT void JNICALL updateMods(JNIEnv *env, jobject instance, jint feature, j
             break;
 
         case 5:
+            // no clip
+            noClipToggled = true;
+            noClip = value;
+            break;
+
+        case 6:
+            rainbowColor = value;
+            colorStartTime = 0;
+            if(rainbowColor) {
+                colorIndex = 0;
+                colorStartTime = get_now_ms();
+            }
+            break;
+
+        case 7:
             if (value > -1 && value < 10)
                 teleportToPlayer = players->m_Items[value];
             break;
 
-        case 6:
+        case 8:
             if (value > -1 && value < 10)
                 teleportToMe = players->m_Items[value];
             break;
 
-        case 7:
+        case 9:
             freezePlayer = NULL;
             if (value > -1 && value < 10)
                 freezePlayer = players->m_Items[value];
+            freezePlayerTimer = get_now_ms();
             break;
 
-        case 8:
+        case 10:
             if (value > -1 && value < 10) {
                 teleportToPlayer = players->m_Items[value];
                 attachToPlayer = true;
@@ -51,9 +67,8 @@ JNIEXPORT void JNICALL updateMods(JNIEnv *env, jobject instance, jint feature, j
             }
             break;
 
-        case 9:
+        case 11:
             if (value > -1 && value < 10) {
-                LOGD("Case 9");
                 teleportToMe = players->m_Items[value];
                 attachPlayerToMe = true;
             } else {
@@ -61,17 +76,21 @@ JNIEXPORT void JNICALL updateMods(JNIEnv *env, jobject instance, jint feature, j
             }
             break;
 
-        case 10:
+        case 12:
             if (value > -1 && value < 10)
                 spoofChatPlayer = players->m_Items[value];
             break;
 
-        case 11:
+        case 13:
             if(value > -1 && value < 10)
                 voteKickPlayer = players->m_Items[value];
             break;
 
-        case 12:
+        case 14:
+            skipVote = value;
+            break;
+
+        case 15:
             // Skip Vote
             if(value < 0) {
                 castVotePlayer = players->m_Items[0];
@@ -81,19 +100,24 @@ JNIEXPORT void JNICALL updateMods(JNIEnv *env, jobject instance, jint feature, j
             }
             break;
 
-        case 13:
-            // start meeting
+        case 16:
             if(value > -1 && value < 10)
                 reportDeadPlayer = players->m_Items[value];
             break;
 
-        case 14:
+        case 17:
+        // TODO:
+            if (value > -1 && value < 10)
+                revivePlayer = players->m_Items[value];
+            break;
+
+        case 18:
             // kill player
             if(value > -1 && value < 10)
                 murderPlayer = players->m_Items[value];
             break;
 
-        case 15:
+        case 19:
             // kill player as me
             if(value > -1 && value < 10) {
                 murderPlayer = players->m_Items[value];
@@ -101,62 +125,24 @@ JNIEXPORT void JNICALL updateMods(JNIEnv *env, jobject instance, jint feature, j
             }
             break;
 
-        case 16:
+        case 20:
             if(value > -1 && value < 10)
                 completePlayerTasks = players->m_Items[value];
             break;
 
-        case 17:
-            forceImpostor = value;
-            break;
-
-        case 18:
-            attachLobbyToPlayer = NULL;
-            attachLobbyTime = 0;
-            if (value > -1 && value < 10) {
-                attachLobbyToPlayer = players->m_Items[value];
-                attachLobbyTime = get_now_ms();
+        case 21:
+            if(value > -1 && value < 10) {
+                copyPlayer = players->m_Items[value];
+                copyPlayerTimer = get_now_ms();
             }
             break;
 
-        case 19:
-            teleportAlltoMe = true;
-            break;
-
-        case 20:
-            if(value > -1 && value < 10)
-                teleportAllToPlayer = players->m_Items[value];
-            break;
-
-        case 21:
-            freezeLobby = value;
-            break;
-
         case 22:
-            // kill crew as someone else
-            murderLobby = true;
-            murderLobbyAsMe = false;
+            lockAllDoors = value;
+            lockDoorTimer = get_now_ms();
             break;
 
         case 23:
-            // kill crew as me
-            murderLobby = true;
-            murderLobbyAsMe = true;
-            break;
-
-        case 24:
-            // kill impostors only
-            murderImpostors = true;
-
-        case 25:
-            sabotageAll = value;
-            break;
-
-        case 26:
-            lockAllDoors = value;
-            break;
-
-        case 27:
             sabotageLoop = -1;
             sabotageTimer = 0;
             if (value > -1 && value < 5) {
@@ -165,34 +151,135 @@ JNIEXPORT void JNICALL updateMods(JNIEnv *env, jobject instance, jint feature, j
             }
             break;
 
-        case 28:
+        case 24:
+            sabotageAll = value;
+            break;
+
+        case 25:
             repairLoop = value;
             break;
 
-        case 29:
+        case 26:
             playShipAnimation = value;
             break;
 
-        case 30:
-            rainbowColor = value;
-            colorStartTime = 0;
-            if(rainbowColor) {
-                colorIndex = 0;
-                colorStartTime = get_now_ms();
+        case 27:
+            // Impostor Count
+            impostorCount = value;
+            break;
+
+        case 28:
+            forceImpostor = value;
+            break;
+
+        case 29:
+            if (value > -1 && value < 10) {
+                impostor1 = players->m_Items[value];
             }
             break;
 
-/*
+        case 30:
+            if (value > -1 && value < 10) {
+                impostor2 = players->m_Items[value];
+            }
+            break;
+
         case 31:
             if (value > -1 && value < 10) {
-                replacePlayer = players->m_Items[value];
+                impostor3 = players->m_Items[value];
             }
             break;
 
-    */
+        case 32:
+            attachLobbyToPlayer = NULL;
+            attachLobbyTime = 0;
+            attachSurround = false;
+            if (value > -1 && value < 10) {
+                attachLobbyToPlayer = players->m_Items[value];
+                attachSurround = true;
+                attachLobbyTime = get_now_ms();
+            }
+            break;
+
+        case 33:
+            attachSurround = false;
+            attachLobbyToPlayer = NULL;
+            attachLobbyTime = 0;
+            if (value > -1 && value < 10) {
+                attachLobbyToPlayer = players->m_Items[value];
+                attachLobbyTime = get_now_ms();
+            }
+            break;
+
+        case 34:
+            teleportAlltoMe = true;
+            break;
+
+        case 35:
+            if(value > -1 && value < 10)
+                teleportAllToPlayer = players->m_Items[value];
+            break;
+
+        case 36:
+            freezeLobby = value;
+            break;
+
+        case 37:
+            // kill crew as someone else
+            murderLobby = true;
+            murderLobbyAsMe = false;
+            break;
+
+        case 38:
+            // kill crew as me
+            murderLobby = true;
+            murderLobbyAsMe = true;
+            break;
+
+        case 39:
+            // kill impostors only
+            murderImpostors = true;
+            break;
+
+        case 40:
+            lastMurdererPlayer = NULL;
+            freezeMurderer = value;
+            break;
+
+        case 41:
+            teleportOnCrime = value;
+            break;
+
+        case 42:
+            lobbySkinChanger = value;
+            skinChangerTimer = get_now_ms();
+            break;
+
+        case 43:
+            lobbyPetChanger = value;
+            petChangerTimer = get_now_ms();
+            break;
+
+        case 44:
+            lobbyHatChanger = value;
+            hatChangerTimer = get_now_ms();
+            break;
+
+        case 45:
+            lobbyColorChanger = value;
+            break;
+
+        case 46:
+            playerSpeed = value;
+            break;
+
+        case 47:
+            changeLightamount = value;
+            break;
     }
 }
 
+// TODO: Fix Custom messages not visibile to players
 JNIEXPORT void JNICALL sendLobbyMessage(JNIEnv *env, jclass klass, jstring text)
 {
     if(!advertiseMenu) {
@@ -206,51 +293,64 @@ JNIEXPORT void JNICALL sendLobbyMessage(JNIEnv *env, jclass klass, jstring text)
 JNIEXPORT jobjectArray JNICALL getPlayerNames(JNIEnv *env, jclass klass)
 {
     jclass stringClass = env->FindClass("java/lang/String");
-    jobjectArray row = env->NewObjectArray(10, stringClass, 0);
+    jobjectArray playerNames = env->NewObjectArray(10, stringClass, 0);
 
-    getPlayersList = true;
     players = NULL;
     int tries = 0;
 
-    do {
-        sleep(1);
-        tries++;
-    } while(tries < 10 && getPlayersList == true);
+    if(amongUsClient == NULL || amongUsClient->GameState == 0 || amongUsClient->GameState == 3) {
+        for(int i = 0; i < 10; i++) {
+            env->SetObjectArrayElement(playerNames, i, env->NewStringUTF("-"));
+        }
+    } else {
+        getPlayersList = true;
 
-    if(players != NULL) {
-        for (int i = 0; i < players->max_length && i < 10; i++) {
-            PlayerControl_o *player = players->m_Items[i];
-            std::string pName = "-";
+        do {
+            sleep(1);
+            tries++;
+        } while (tries < 10 && getPlayersList == true);
 
-            if (player != NULL) {
-                pName = "[" + readUint162Str(&player->_cachedData->PlayerName->m_firstChar,
-                                             player->_cachedData->PlayerName->m_stringLength) + "]";
-
-                if (classPalette != NULL) {
-                    std::string color = readUint162Str(
-                            &classPalette->static_fields->ShortColorNames->m_Items[player->_cachedData->ColorId]->m_firstChar,
-                            classPalette->static_fields->ShortColorNames->m_Items[player->_cachedData->ColorId]->m_stringLength);
-
-                    pName = pName + " - " + color;
-                }
+        if(tries > 10) {
+            for(int i = 0; i < 10; i++) {
+                env->SetObjectArrayElement(playerNames, i, env->NewStringUTF("-"));
             }
-            LOGD("Name: %s", pName.data());
-            env->SetObjectArrayElement(row, i, env->NewStringUTF(pName.c_str()));
+        } else if (tries < 10 && players != NULL) {
+            for (int i = 0; i < players->max_length && i < 10; i++) {
+                PlayerControl_o *player = players->m_Items[i];
+                std::string pName = "-";
+
+                if (player != NULL) {
+                    pName = "[" + readUint162Str(&player->_cachedData->PlayerName->m_firstChar,
+                                                 player->_cachedData->PlayerName->m_stringLength) +
+                            "]";
+
+                    if (classPalette != NULL) {
+                        std::string color = readUint162Str(
+                                &classPalette->static_fields->ShortColorNames->m_Items[player->_cachedData->ColorId]->m_firstChar,
+                                classPalette->static_fields->ShortColorNames->m_Items[player->_cachedData->ColorId]->m_stringLength);
+
+                        pName = pName + " - " + color;
+                    }
+                }
+                LOGD("Name: %s", pName.data());
+                env->SetObjectArrayElement(playerNames, i, env->NewStringUTF(pName.c_str()));
+            }
         }
     }
 
     getPlayersList = false;
 
-    return row;
+    return playerNames;
 }
 
 void* hack_thread(void*) {
-
     basePtr = 0;
     int tries = 0;
 
     uintptr_t tempPtr = 0;
+
     // wrong basePtr, maybe cos library has not loaded yet?
+/*
     do {
         tempPtr = get_lib_start("libil2cpp.so");
         if(tries++ > 100) { LOGD("[-] Exiting: tempPtr not found"); exit(0); }
@@ -261,6 +361,24 @@ void* hack_thread(void*) {
         basePtr = get_lib_start("libil2cpp.so");
         if(tries++ > 100) { LOGD("[-] Exiting: basePtr not found"); exit(0); }
     } while(basePtr == tempPtr || basePtr == 0x0);
+*/
+    do {
+        tempPtr = get_lib_start("libil2cpp.so");
+        if(tries++ > 200) { LOGD("[-] Exiting: tempPtr not found"); exit(0);}
+    } while(tempPtr == 0);
+
+    do {
+        sleep(2);
+        tempPtr = get_lib_start("libil2cpp.so");
+        if (tries++ > 15) {
+            if (tempPtr == get_lib_start("libil2cpp.so")) {
+                basePtr = tempPtr;
+            } else {
+                LOGD("[-] Exiting: basePtr not found");
+                exit(0);
+            }
+        }
+    } while(basePtr == 0x0);
 
     applyHooks();
 
