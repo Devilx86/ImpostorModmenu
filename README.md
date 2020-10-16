@@ -1,6 +1,5 @@
 # Impostor Modmenu v1.3
 Mod menu for Among Us on Android
-All features except for force impostor work without being the host and is visible to other clients in the game.
 
 - Official Download (v1.3): http://www.mediafire.com/file/368z830bboluaw9/amongus-impostor-v1.3-fixed.apk/file
 - Official Post(v1.3): https://polarmods.com/threads/among-us-imposter-modmenu-for-android-arm64-teleport-freeze-attach-kick-and-more.951/#post-28402
