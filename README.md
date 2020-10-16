@@ -6,6 +6,7 @@ Mod menu for Among Us on Android
 
 - A short demo(v1.1): https://www.youtube.com/watch?v=zrc_FMnWyRM&feature=youtu.be
 
+## Mod Features
 Self
 - Player Speed - Thanks to @Revasnake
 - Max Light Range - Thanks to @Revasnake
