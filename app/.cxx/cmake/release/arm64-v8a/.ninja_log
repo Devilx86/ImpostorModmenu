@@ -1,0 +1,6 @@
+# ninja log v5
+0	225	1602776485	CMakeFiles/devilhook.dir/src/main/cpp/And64InlineHook/And64InlineHook.cpp.o	ad6cc895813cd4fe
+0	1679	1602776486	CMakeFiles/devilhook.dir/src/main/cpp/main.cpp.o	a5c3e6bfe91c1c7d
+1680	1797	1602776486	../../../../build/intermediates/cmake/release/obj/arm64-v8a/libdevilhook.so	bba0879cb3901d4f
+1	1782	1602827367	CMakeFiles/devilhook.dir/src/main/cpp/main.cpp.o	a5c3e6bfe91c1c7d
+1782	1896	1602827367	../../../../build/intermediates/cmake/release/obj/arm64-v8a/libdevilhook.so	bba0879cb3901d4f

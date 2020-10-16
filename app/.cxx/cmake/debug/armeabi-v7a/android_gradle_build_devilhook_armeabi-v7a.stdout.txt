@@ -1,0 +1,2 @@
+ninja: Entering directory `/Users/rohit/ApkProjects/ImpostorMenu/app/.cxx/cmake/debug/armeabi-v7a'
+ninja: no work to do.

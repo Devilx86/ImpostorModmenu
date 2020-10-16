@@ -1,0 +1,2 @@
+ninja: Entering directory `/Users/rohit/ApkProjects/ImpostorMenu/app/.cxx/cmake/release/arm64-v8a'
+ninja: no work to do.

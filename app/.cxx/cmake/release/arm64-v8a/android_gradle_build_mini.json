@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/rohit/ApkProjects/ImpostorMenu/app/CMakeLists.txt",
+    "/Users/rohit/Library/Android/sdk/ndk-bundle/build/cmake/android.toolchain.cmake",
+    "/Users/rohit/Library/Android/sdk/ndk-bundle/build/cmake/platforms.cmake"
+  ],
+  "cleanCommands": [
+    "/Users/rohit/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/rohit/ApkProjects/ImpostorMenu/app/.cxx/cmake/release/arm64-v8a\" clean"
+  ],
+  "buildTargetsCommand": "/Users/rohit/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja  -C \"/Users/rohit/ApkProjects/ImpostorMenu/app/.cxx/cmake/release/arm64-v8a\" {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "devilhook-Release-arm64-v8a": {
+      "artifactName": "devilhook",
+      "buildCommand": "/Users/rohit/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/rohit/ApkProjects/ImpostorMenu/app/.cxx/cmake/release/arm64-v8a\" devilhook",
+      "abi": "arm64-v8a",
+      "output": "/Users/rohit/ApkProjects/ImpostorMenu/app/build/intermediates/cmake/release/obj/arm64-v8a/libdevilhook.so",
+      "runtimeFiles": []
+    }
+  }
+}

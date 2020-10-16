@@ -1,0 +1,25 @@
+[
+{
+  "directory": "/Users/rohit/ApkProjects/ImpostorMenu/app/.cxx/cmake/release/armeabi-v7a",
+  "command": "/Users/rohit/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++ --target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/rohit/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/rohit/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot  -Ddevilhook_EXPORTS  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mfpu=vfpv3-d16 -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security -stdlib=libc++  -Oz -DNDEBUG  -fPIC   -o CMakeFiles/devilhook.dir/src/main/cpp/main.cpp.o -c /Users/rohit/ApkProjects/ImpostorMenu/app/src/main/cpp/main.cpp",
+  "file": "/Users/rohit/ApkProjects/ImpostorMenu/app/src/main/cpp/main.cpp"
+},
+
+{
+  "directory": "/Users/rohit/ApkProjects/ImpostorMenu/app/.cxx/cmake/release/armeabi-v7a",
+  "command": "/Users/rohit/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++ --target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/rohit/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/rohit/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot  -Ddevilhook_EXPORTS  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mfpu=vfpv3-d16 -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security -stdlib=libc++  -Oz -DNDEBUG  -fPIC   -o CMakeFiles/devilhook.dir/src/main/cpp/Substrate/SubstrateHook.cpp.o -c /Users/rohit/ApkProjects/ImpostorMenu/app/src/main/cpp/Substrate/SubstrateHook.cpp",
+  "file": "/Users/rohit/ApkProjects/ImpostorMenu/app/src/main/cpp/Substrate/SubstrateHook.cpp"
+},
+
+{
+  "directory": "/Users/rohit/ApkProjects/ImpostorMenu/app/.cxx/cmake/release/armeabi-v7a",
+  "command": "/Users/rohit/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++ --target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/rohit/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/rohit/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot  -Ddevilhook_EXPORTS  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mfpu=vfpv3-d16 -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security -stdlib=libc++  -Oz -DNDEBUG  -fPIC   -o CMakeFiles/devilhook.dir/src/main/cpp/Substrate/SubstrateDebug.cpp.o -c /Users/rohit/ApkProjects/ImpostorMenu/app/src/main/cpp/Substrate/SubstrateDebug.cpp",
+  "file": "/Users/rohit/ApkProjects/ImpostorMenu/app/src/main/cpp/Substrate/SubstrateDebug.cpp"
+},
+
+{
+  "directory": "/Users/rohit/ApkProjects/ImpostorMenu/app/.cxx/cmake/release/armeabi-v7a",
+  "command": "/Users/rohit/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++ --target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/rohit/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/rohit/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot  -Ddevilhook_EXPORTS  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mfpu=vfpv3-d16 -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security -stdlib=libc++  -Oz -DNDEBUG  -fPIC   -o CMakeFiles/devilhook.dir/src/main/cpp/Substrate/SubstratePosixMemory.cpp.o -c /Users/rohit/ApkProjects/ImpostorMenu/app/src/main/cpp/Substrate/SubstratePosixMemory.cpp",
+  "file": "/Users/rohit/ApkProjects/ImpostorMenu/app/src/main/cpp/Substrate/SubstratePosixMemory.cpp"
+}
+]

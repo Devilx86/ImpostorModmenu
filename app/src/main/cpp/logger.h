@@ -1,6 +1,6 @@
 #pragma once
 #define __LOG_TAG__ "IMPOSTORMENU"
-//#define __DEBUG__
+#define __DEBUG__
 
 #include <jni.h>
 #include <android/log.h>

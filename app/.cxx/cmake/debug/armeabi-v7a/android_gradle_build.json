@@ -1,0 +1,58 @@
+{
+  "stringTable": {
+    "0": "/Users/rohit/ApkProjects/ImpostorMenu/app/.cxx/cmake/debug/armeabi-v7a",
+    "1": "--target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/rohit/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/rohit/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Ddevilhook_EXPORTS -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mfpu=vfpv3-d16 -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security -stdlib=libc++ -O0 -fno-limit-debug-info -fPIC"
+  },
+  "buildFiles": [
+    "/Users/rohit/ApkProjects/ImpostorMenu/app/CMakeLists.txt",
+    "/Users/rohit/Library/Android/sdk/ndk-bundle/build/cmake/android.toolchain.cmake",
+    "/Users/rohit/Library/Android/sdk/ndk-bundle/build/cmake/platforms.cmake"
+  ],
+  "cleanCommands": [
+    "/Users/rohit/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/rohit/ApkProjects/ImpostorMenu/app/.cxx/cmake/debug/armeabi-v7a\" clean"
+  ],
+  "buildTargetsCommand": "/Users/rohit/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja  -C \"/Users/rohit/ApkProjects/ImpostorMenu/app/.cxx/cmake/debug/armeabi-v7a\" {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "devilhook-Debug-armeabi-v7a": {
+      "buildCommand": "/Users/rohit/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/rohit/ApkProjects/ImpostorMenu/app/.cxx/cmake/debug/armeabi-v7a\" devilhook",
+      "buildType": "debug",
+      "toolchain": "1084780477",
+      "abi": "armeabi-v7a",
+      "artifactName": "devilhook",
+      "files": [
+        {
+          "src": "/Users/rohit/ApkProjects/ImpostorMenu/app/src/main/cpp/main.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/Users/rohit/ApkProjects/ImpostorMenu/app/src/main/cpp/Substrate/SubstrateHook.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/Users/rohit/ApkProjects/ImpostorMenu/app/src/main/cpp/Substrate/SubstrateDebug.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/Users/rohit/ApkProjects/ImpostorMenu/app/src/main/cpp/Substrate/SubstratePosixMemory.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        }
+      ],
+      "headers": [],
+      "output": "/Users/rohit/ApkProjects/ImpostorMenu/app/build/intermediates/cmake/debug/obj/armeabi-v7a/libdevilhook.so",
+      "runtimeFiles": []
+    }
+  },
+  "toolchains": {
+    "1084780477": {
+      "cppCompilerExecutable": "/Users/rohit/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++"
+    }
+  },
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

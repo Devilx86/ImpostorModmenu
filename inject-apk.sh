@@ -1,12 +1,11 @@
 # Dont use '~' write the full path or use $HOME
 APK="./amongus.apk"
-MOD_APK="$HOME/ApkProjects/ImpostorMenu/app/build/outputs/apk/release/app-release-unsigned.apk"
+MODMENU_APK="$HOME/ApkProjects/ImpostorMenu/app/build/outputs/apk/release/app-release-unsigned.apk"
 
 # Signing configuration
 KEYSTORE="$HOME/keystore/ImpostorMenu.keystore"
-ALIAS="Devil"
 
-OUTPUT="$PWD/amongus-devilx86v1.2.apk"
+OUTPUT="$PWD/amongus-impostor-v1.3.apk"
 WDIR=`mktemp -d -p "/tmp/"`
 
 if [[ ! "$WDIR" || ! -d "$WDIR" ]]; then
@@ -22,21 +21,21 @@ function cleanup {
 trap cleanup EXIT
 
 echo "APK=$APK"
-echo "MOD_APK=$MOD_APK"
+echo "MODMENU_APK=$MODMENU_APK"
 echo "OUTPUT=$OUTPUT"
 echo "KEYSTORE=$KEYSTORE"
 echo "WDIR=$WDIR"
 echo ""
 
-if [ ! -f "$MOD_APK" ]; then
+if [ ! -f "$MODMENU_APK" ]; then
 	echo ""
-    echo "[-] ERROR: MOD_APK file does not exist"
+    echo "[-] ERROR: MODMENU_APK file does not exist"
 	exit 1
 fi
 
 if [ ! -f "$APK" ]; then
 	echo ""
-    echo "[-] ERROR: MOD_APK file does not exist"
+    echo "[-] ERROR: APK file does not exist"
 	exit 1
 fi
 
@@ -47,15 +46,15 @@ apktool empty-framework-dir > /dev/null
 echo ""
 echo "[+] Copying files"
 cp $APK $WDIR
-cp $MOD_APK $WDIR/
+cp $MODMENU_APK $WDIR/
 XAPK=$(basename "$APK")
-MOD_APK=$(basename "$MOD_APK")
+MODMENU_APK=$(basename "$MODMENU_APK")
 
 cd $WDIR
 echo ""
-echo "[+] Decompiling $MOD_APK file"
-apktool d $(basename "$MOD_APK")
-MOD_APK="${MOD_APK%.apk}"
+echo "[+] Decompiling $MODMENU_APK file"
+apktool d $(basename "$MODMENU_APK")
+MODMENU_APK="${MODMENU_APK%.apk}"
 
 echo ""
 echo "[+] Decompiling $(basename $APK) file"
@@ -65,15 +64,17 @@ APK="${APK%.apk}"
 
 echo ""
 echo "[+] Copying libraries"
-cp -r $MOD_APK/lib/* $APK/lib/
+cp -r $MODMENU_APK/lib/* $APK/lib/
+
+#rm -rf $APK/lib/arm64-v8a/
 
 echo "[+] Copying assets"
-cp $MOD_APK/assets/* $APK/assets/
+cp $MODMENU_APK/assets/* $APK/assets/
 
 echo "[+] Copying smali files"
 
 mkdir -p $APK/smali/com/devilx86/modmenu
-cp -r $MOD_APK/smali/com/devilx86/modmenu/Menu* $APK/smali/com/devilx86/modmenu
+cp -r $MODMENU_APK/smali/com/devilx86/modmenu/Menu* $APK/smali/com/devilx86/modmenu
 
 echo "[+] Injecting startup code"
 LineNumber=$(($(cat $APK/smali/com/unity3d/player/UnityPlayerActivity.smali | grep -n "requestFocus()" | cut -f1 -d: | sort -u | head -n 1) - 1))
@@ -106,7 +107,12 @@ rm $APK/AndroidManifest.xml.original
 
 echo ""
 echo "[+] Baksmaling apk to $OUTPUT"
-apktool b "$APK" -o $OUTPUT
+apktool b "$APK" -o unaligned.apk
+
+echo "[+] Zip aligning APK"
+zipalign -v -p 4 unaligned.apk aligned.apk | head -n 5
+
+mv aligned.apk $OUTPUT
 
 echo ""
 echo "[+] Unsigned APK Created: $OUTPUT"
@@ -114,5 +120,7 @@ echo "[+] Unsigned APK Created: $OUTPUT"
 if [ -e $KEYSTORE ]
 then
 	echo "[+] Signing $OUTPUT"
-	jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore $KEYSTORE $OUTPUT $ALIAS
+	zipalign -v -c 4 $OUTPUT | head -n 5
+	apksigner sign --ks ~/keystore/ImpostorMenu.keystore $OUTPUT
+	zipalign -v -c 4 $OUTPUT | head -n 5
 fi

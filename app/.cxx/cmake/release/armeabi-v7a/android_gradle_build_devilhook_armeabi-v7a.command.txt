@@ -1,0 +1,7 @@
+Executable : /Users/rohit/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja
+arguments : 
+-C
+/Users/rohit/ApkProjects/ImpostorMenu/app/.cxx/cmake/release/armeabi-v7a
+devilhook
+jvmArgs : 
+

@@ -1,0 +1,8 @@
+# ninja log v5
+1	130	1602776483	CMakeFiles/devilhook.dir/src/main/cpp/Substrate/SubstratePosixMemory.cpp.o	1f307f0bfbed2389
+1	139	1602776483	CMakeFiles/devilhook.dir/src/main/cpp/Substrate/SubstrateDebug.cpp.o	bfa603bc19b25561
+1	322	1602776483	CMakeFiles/devilhook.dir/src/main/cpp/Substrate/SubstrateHook.cpp.o	a15778066610ab97
+0	1668	1602776485	CMakeFiles/devilhook.dir/src/main/cpp/main.cpp.o	c6bb5a54dec4cbc
+1668	1733	1602776485	../../../../build/intermediates/cmake/release/obj/armeabi-v7a/libdevilhook.so	cf318052c267f34a
+3	1733	1602827365	CMakeFiles/devilhook.dir/src/main/cpp/main.cpp.o	c6bb5a54dec4cbc
+1734	1812	1602827365	../../../../build/intermediates/cmake/release/obj/armeabi-v7a/libdevilhook.so	cf318052c267f34a

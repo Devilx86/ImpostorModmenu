@@ -72,8 +72,8 @@ bool memWrite(void *addr, void *buffer, size_t len) {
     return ret;
 }
 
-bool memRead(void *memaddr, void *dest, size_t len) {
-    return memcpy((void*) dest, (void*) memaddr, len) != NULL;
+bool memRead(void *addr, void *dest, size_t len) {
+    return memcpy(dest, addr, len) != NULL;
 }
 
 // Convert String to uint16 array
@@ -81,8 +81,8 @@ void readStr2Uint16(const char *buffer, uint16_t *dest, size_t len) {
     char temp[len * 2 + 1];
     memset(temp, 0, len * 2 + 1);
 
-    for (int i = 0, t = 0; i < len; i++, t = t + 2 ) {
-        sprintf(&temp[t], "%c", (unsigned char) buffer[i]);
+    for (int i = 0, _size = 0; i < len; i++, _size = _size + 2 ) {
+        sprintf(&temp[_size], "%c", (unsigned char) buffer[i]);
     }
 
     memRead(&temp[0], (void*)dest, len * 2 + 1);
@@ -107,6 +107,17 @@ std::string readUint162Str(void *addr, size_t len) {
     ret += buffer;
     return ret;
 }
+
+static double get_now_ms(void) {
+    struct timespec res;
+    clock_gettime(CLOCK_REALTIME, &res);
+    return 1000.0 * res.tv_sec + (double) res.tv_nsec / 1e6;
+}
+
+static double get_delta(double start, double end) {
+    return end - start;
+}
+
 
 std::string read2HexStr(void *addr, size_t len) {
     char temp[len];
