@@ -1,4 +1,4 @@
-# Impostor Modmenu
+# Impostor Modmenu v1.3
 Mod menu for Among Us on Android
 All features except for force impostor work without being the host and is visible to other clients in the game.
 
