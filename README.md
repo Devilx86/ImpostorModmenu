@@ -6,7 +6,7 @@ Mod menu for Among Us on Android
 
 - A short demo(v1.1): https://www.youtube.com/watch?v=zrc_FMnWyRM&feature=youtu.be
 
-- Want to help? or Need Help? or Wanna talk? [Discord](https://discord.gg/3fxuKzx)
+- Want to help? or Need Help? or Wanna talk? [Discord](https://discord.com/invite/e3mgRU8)
 
 ## Mod Features
 Self
