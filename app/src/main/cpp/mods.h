@@ -41,7 +41,7 @@ bool lobbySkinChanger = false;
 bool lobbyPetChanger = false;
 bool lobbyHatChanger = false;
 bool lobbyColorChanger = false;
-
+bool sled = false;
 AmongUsClient_o *amongUsClient = NULL;
 VoteBanSystem_o *vbInstance = NULL;
 Palette_c *classPalette = NULL;
