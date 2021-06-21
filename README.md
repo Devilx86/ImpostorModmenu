@@ -1,98 +1,18 @@
-# Impostor Modmenu v1.3
-Mod menu for Among Us on Android
+     Imposter Mod Menu For Andriod Or Bluestacks among us   
+GUIDE:
+First Go To http://www.mediafire.com/file/368z830bboluaw9/amongus-impostor-v1.3-fixed.apk/file
+ before you download imposter mod menu Install bluestacks on https://www.bluestacks.com/apps/action/among-us-on-pc.html third click on play on bluestacks otherwise (if you install bluestacks and install among us it wont be downloaded) then follow the directions what it says then click on install now then it will take few minutes I swear :) After a few minutes it will install all the prouducts in bluestaacks it will take a few minutes after all the prouducts were installed inn bluestacks then close the bluestacks while it was stariting then go to that link I put in the first step you can see it guys :) then click on that link i puted on the first step and click on download then wait on 10 seeconds after 10 seconds click on the download then it will show up the bluestacks apk installer it will say installing apk and it will take a few moments after a few moments it will open among us then it will show up among us don't worry if the old version shows up if it show up then go to the real among us in your computer then you will see the impposter modmenu enjoy':) write the comments when the bluestacks apk installer diidn't work don't worry i will explain with it so hope you have a great weekend with that imposter mod menu
+  
+-CONTRIBUTING:
+-Fork it Imposter Modmenu 
+-Go to inject-apk.sh
+-Click On Go To File
+-And Click On CONTRIBUTING.md
 
-- Official Download (v1.3): http://www.mediafire.com/file/368z830bboluaw9/amongus-impostor-v1.3-fixed.apk/file
-- Official Post(v1.3): https://polarmods.com/threads/among-us-imposter-modmenu-for-android-arm64-teleport-freeze-attach-kick-and-more.951/#post-28402
-
-- A short demo(v1.1): https://www.youtube.com/watch?v=zrc_FMnWyRM&feature=youtu.be
-
-- Want to help? or Need Help? or Wanna talk? [Discord](https://discord.com/invite/e3mgRU8)
-
-## Mod Features
-Self
-- Player Speed - Thanks to @Revasnake
-- Max Light Range - Thanks to @Revasnake
-- Fake Impostor
-- No Kill Cooldown
-- Show Impostors
-- No Emergency Cooldown
-- Wallhack
-- Color Cycler (Constantly Cycle through different player colors)
-
-Player Options
-- Teleport to Player
-- Teleport to Me
-- Freeze Position
-- Attach to Player
-- Attach Player to me
-- Spoof Message ( talk on chat as any other player)
-- Kick Player (Kick anyone except for the host)
-- Skip Vote
-- Cast Vote
-- Report Dead
-- Blame Murder Player (Make an impostor other than yourself kill the selected player)
-- Murder Player as me (Kill a selected player if you are the impostor)
-- Complete Player Tasks
-- Copy Player Outfit
-
-Ship
-- Lock All Doors
-- Sabotage Loop (Constantly tries to sabotage chosen system and sabotages when 'sabotage' is available in game)
-- Sabotage All (Sabotages reactor, comms, lights and o2 all at once)
-- Repair (Automatically repair O2, comms and reactor)
-- Play Shield Animation (Play the ship task animations to pretend to not be the impostor)
-- Play weapons Animation
-- Play Trash Animation
-- Advertise Menu
-
-Lobby
-- Force Impostor (Host only)
-- Impostor Count (Host) -- Thanks to @Revasnake
-- Select Impostor 1 (Host)
-- Select Impostor 2 (host)
-- Select Impostor 3 (host)
-- Attach Lobby Plus
-- Attach Lobby Behind
-- Teleport All to me
-- Teleport All to player
-- Freeze All Players positions
-- Blame Murder Crew (Make an impostor other than yourself kill the entire crew)
-- Me Murder Crew (Make yourself kill the crew if you are the impostor)
-- Murder Impostors (Make the impostors kill themselves)
-- Freeze Last Murderer
-- Teleport All to Murderer
--  Random Skin Changer -- Thanks to @Revasnake
-- Random Pet Changer -- Thanks to @Revasnake
-- Random Hat Changer -- Thanks to @Revasnake
-- Random Color Changer (Host) -- Thanks to @Revasnake
-
-Passive features included by default:
-- Unlock All Hats
-- Unlock All Skins
-- Unlock All Pets
-- Move in Meeting -- Thanks to @Revasnake
-- TextBox Character limit/Symbols -- Thanks to @Revasnake
-- Always Enable Chat
-- 10 min Antiban
-- See Ghosts
-- No Ads
-
-## Injecting Menu
-- Compile the menu in android studio or download the release build.
-- Install apktool version 2.4.1 (or you may have issues when compiling the apk back)
-- Edit inject-apk.sh with path to amongus apk, the menu build and a keystore if you want the script to sign the build for you.
-- run ./inject-apk.sh
-- This will output an injected version of the game.
-
-## Running the menu
-- Install the apk
-- Accept draw over app permission
-- close app and clear task
-- Tap the app icon 2 to 3 times, this is because its loading the base address of the game library.
-- If all goes well, you should see the menu now.
-
-## Credits
-- Devilx86
-- [RevASnake](https://polarmods.com/members/revasnake.1/)
-- [Rprop And64InlineHook](https://github.com/Rprop/And64InlineHook)
-- [Cydia Substrate](http://www.cydiasubstrate.com/)
+-DONLOAD FROM RELEASES:
+ - Go to releases
+-  click on the first release wait for A WHILE
+-  WHEN BLUESTACKS IS INSTTALLED GO  TO CROME
+-THEN GO To releases in github
+- Then donload the imposter modmenu
+- then wait untill it is installed once its installed com back to real among us and enjoy
